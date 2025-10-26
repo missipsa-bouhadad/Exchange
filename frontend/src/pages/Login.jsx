@@ -9,11 +9,50 @@ import {
 import { Button } from "../components/ui/button"
 import { Label } from "../components/ui/label"
 import { Input } from "../components/ui/input"
-import { Link } from "react-router-dom"
-import { Eye, EyeOff } from "lucide-react" // 👁️ icônes pour montrer / cacher le mot de passe
+import { Link, useNavigate } from "react-router-dom"
+import { Eye, EyeOff } from "lucide-react"
+import axios from "axios"
+import { toast } from "sonner"
 
 const Login = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/v1/user/login",
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+
+      if (res.data.success) {
+        toast.success(res.data.message)
+        navigate("/")
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed")
+      console.log(error)
+    }
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 pt-24">
@@ -23,7 +62,7 @@ const Login = () => {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex flex-col gap-2">
               {/* Champ Email */}
               <div className="grid gap-2">
@@ -33,11 +72,13 @@ const Login = () => {
                   id="email"
                   type="email"
                   placeholder="john@example.com"
+                  value={user.email}
+                  onChange={handleChange}
                   required
                 />
               </div>
 
-              {/* Champ Password avec icône */}
+              {/* Champ Password */}
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
@@ -53,8 +94,10 @@ const Login = () => {
                     name="password"
                     id="password"
                     type={showPassword ? "text" : "password"}
+                    value={user.password}
+                    onChange={handleChange}
                     required
-                    className="pr-10" // espace pour l’icône à droite
+                    className="pr-10"
                   />
                   <button
                     type="button"
@@ -70,13 +113,15 @@ const Login = () => {
                 </div>
               </div>
             </div>
+
+            {/* ✅ Le bouton de connexion doit être DANS le form */}
+            <Button type="submit" className="w-full bg-cyan-950">
+              Login
+            </Button>
           </form>
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
           <Button variant="outline" className="w-full">
             Login with Google
           </Button>

@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import About from './pages/About'
 import NavBar from './components/NavBar'
+import { CustomToaster } from "./components/ui/sonner"
 
 const router=createBrowserRouter([
   {
@@ -34,6 +35,7 @@ const App = () => {
   return (
     <>
       <RouterProvider router={router}/>
+      <CustomToaster position="top-center" richColors /> 
     </>
   )
 }
