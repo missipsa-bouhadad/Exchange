@@ -1,12 +1,50 @@
 import React from 'react'
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { Search } from 'lucide-react'
+import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { Avatar } from './ui/avatar'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'sonner'
+import { setUser } from '../redux/authSlice'
+import axios from 'axios'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 
 const NavBar = () => {
-  const user = false;
+  const { user } = useSelector(store => store.auth)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const logoutHandler = async (e) => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8000/api/v1/user/logout",
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      if (res.data.success) {
+        toast.success(res.data.message)
+        dispatch(setUser(null))
+        navigate("/")
+      }
+    } catch (error) {
+      toast.error(error)
+    }
+  }
 
   return (
     <div className="py-4 fixed w-full shadow bg-cyan-950 text-white z-50">
@@ -45,8 +83,44 @@ const NavBar = () => {
 
           {/* Login / Sign up */}
           {user ? (
-            <div>
+            <div className='ml-7 flex gap-3 items-center'>
               {/* Espace pour menu utilisateur connecté */}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/profile">Profile</Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/posts">Your announcements</Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/demandes">Messages</Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/create">Create</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logoutHandler} className="text-red-600 focus:text-red-700">
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button className="bg-white text-cyan-950 hover:bg-gray-100" onClick={logoutHandler}>Logout</Button>
+
+
+
             </div>
           ) : (
             <div className="flex gap-2">

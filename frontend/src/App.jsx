@@ -7,6 +7,11 @@ import SignUp from './pages/SignUp'
 import About from './pages/About'
 import NavBar from './components/NavBar'
 import { CustomToaster } from "./components/ui/sonner"
+import Dashboard from './pages/Dashboard'
+import Profile from './pages/Profile'
+import Posts from './pages/Posts'
+import Demandes from './pages/Demandes'
+import Create from './pages/Create'
 
 const router=createBrowserRouter([
   {
@@ -29,6 +34,28 @@ const router=createBrowserRouter([
     path:'/about',
     element:<><NavBar/><About/></>
   },
+  {
+    path:'/dashboard',
+    element:<><NavBar/><Dashboard/></>,
+    children:[
+      {
+        path:"profile",
+        element:<><Profile/></>
+      },
+      {
+        path:"posts",
+        element:<><Posts/></>
+      },
+      {
+        path:"demandes",
+        element:<><Demandes/></>
+      },
+      {
+        path:"create",
+        element:<><Create/></>
+      }
+  ]
+  }
 ])
 
 const App = () => {

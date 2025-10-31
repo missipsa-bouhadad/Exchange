@@ -13,18 +13,23 @@ import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react"
 import axios from "axios"
 import { toast } from "sonner"
+import { useDispatch } from "react-redux"
+import { setUser } from "../redux/authSlice"
 
 const Login = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false)
-  const [user, setUser] = useState({
+
+  // ✅ Renommé pour éviter le conflit avec Redux setUser
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setUser((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }))
@@ -35,7 +40,7 @@ const Login = () => {
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/user/login",
-        user,
+        formData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -46,12 +51,15 @@ const Login = () => {
 
       if (res.data.success) {
         toast.success(res.data.message)
+        // ✅ Ici on utilise bien le setUser Redux
+        dispatch(setUser(res.data.user))
         navigate("/")
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed")
       console.log(error)
     }
+
   }
 
   return (
@@ -72,7 +80,7 @@ const Login = () => {
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  value={user.email}
+                  value={formData.email}
                   onChange={handleChange}
                   required
                 />
@@ -94,7 +102,7 @@ const Login = () => {
                     name="password"
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    value={user.password}
+                    value={formData.password}
                     onChange={handleChange}
                     required
                     className="pr-10"
@@ -114,7 +122,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* ✅ Le bouton de connexion doit être DANS le form */}
+            {/* ✅ Bouton de connexion */}
             <Button type="submit" className="w-full bg-cyan-950">
               Login
             </Button>

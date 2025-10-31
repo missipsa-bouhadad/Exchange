@@ -81,7 +81,7 @@ export const login = async (req, res) => {
         return res.status(200).cookie("token",token,{maxAge:1*24*60*60*1000,httpsOnly:true,sameSite:"strict"}).json({
             success:true,
             message:`welcome ${userByEmail.firstName}`,
-            userByEmail
+            user: userByEmail 
         })
 
     } catch (error) {
