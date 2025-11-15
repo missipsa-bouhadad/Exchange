@@ -18,6 +18,7 @@ const router=createBrowserRouter([
     path:'/',
     element:<><NavBar/><Home/></>
   },
+  
   {
     path:'/announcements',
     element:<><NavBar/><Announcements/></>

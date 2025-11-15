@@ -18,6 +18,14 @@ const userSchema=mongoose.Schema({
         type:String,
         required:true
     },
+    tel: {
+        type: String,
+        default: ""
+    },
+    adresse: {
+        type: String,
+        default: ""
+    },
     bio:{
         type:String,
         default:""
@@ -30,9 +38,6 @@ const userSchema=mongoose.Schema({
         type:String,
         default:""
     },
-    instagram:{type:String,default:""},
-    linkedin:{type:String,default:""},
-    github:{type:String,default:""},
     facebook:{type:String,default:""},
 
 

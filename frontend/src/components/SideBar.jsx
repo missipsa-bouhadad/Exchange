@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 
 function SideBar() {
   return (
-    <div className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-56 bg-gray-900 text-white shadow-lg flex flex-col py-6">
+    <div className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-[200px] md:w-[250px] bg-gray-900 text-white shadow-lg flex flex-col py-6">
       <NavLink
         to="/dashboard/profile"
         className={({ isActive }) =>
