@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, {Types as SchemaTypes} from "mongoose";
 
 const adSchema=mongoose.Schema({
     title:{
@@ -11,20 +11,26 @@ const adSchema=mongoose.Schema({
     },
     type:{
         type:String,
+        enum: ["GOOD", "SKILL"],
         required:true,
-        unique:true
     },
-    category:{
+    city:{
         type:String,
         required:true
     },
-    user_id: {
-        type: String,
-        default: ""
+    imageUrl:{
+        type:String,
+        default:""
+    },
+    user: {
+        type: SchemaTypes.ObjectId,
+        ref: 'User',
+        required: true,
     },
     status: {
         type: String,
-        default: ""
+        enum: ["AVAILABLE", "EXCHANGED"],
+        default: "AVAILABLE"
     },
 
 
