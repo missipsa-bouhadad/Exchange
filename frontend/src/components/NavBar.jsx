@@ -101,7 +101,7 @@ const NavBar = () => {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/posts">Your announcements</Link>
+                    <Link to="/dashboard/ads">Your announcements</Link>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>

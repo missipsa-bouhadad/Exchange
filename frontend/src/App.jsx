@@ -13,6 +13,7 @@ import Posts from './pages/Posts'
 import Demandes from './pages/Demandes'
 import Create from './pages/Create'
 import AdDetail from "@/pages/AdDetail.jsx";
+import UserAnnouncements from "@/pages/UserAnnouncements.jsx";
 
 const router=createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router=createBrowserRouter([
       {
         path:"profile",
         element:<><Profile/></>
+      },
+      {
+        path:"ads",
+        element:<><UserAnnouncements/></>
       },
       {
         path:"posts",

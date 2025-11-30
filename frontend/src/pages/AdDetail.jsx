@@ -15,13 +15,12 @@ const AdDetail = () => {
         const fetchAdDetail = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/api/v1/ad/${id}`);
-                // Adapter selon si ton backend renvoie l'objet direct ou dans .data
                 setAd(response.data);
                 console.log(ad)
                 setLoading(false);
             } catch (err) {
                 console.error("Erreur:", err);
-                setError("Annonce introuvable ou erreur serveur.");
+                setError("NOT_FOUND");
                 setLoading(false);
             }
         };
@@ -29,8 +28,25 @@ const AdDetail = () => {
     }, [id]);
 
     if (loading) return <div className="flex justify-center mt-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
-    if (error) return <div className="text-center mt-20 text-red-500 font-bold">{error}</div>;
-    if (!ad) return null;
+    //if (error) return <div className="text-center mt-20 text-red-500 font-bold">{error}</div>;
+    if (error === "NOT_FOUND") return (
+        <div className="flex flex-col items-center justify-center py-30 text-center px-4">
+            <div className="bg-gray-100 p-6 rounded-full mb-4">
+                <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Annonce introuvable</h2>
+            <p className="text-gray-600 mb-6">Cette annonce a été supprimée ou n'existe pas.</p>
+            <button
+                onClick={() => navigate('/announcements')}
+                className="bg-cyan-950 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+                Retourner aux annonces
+            </button>
+        </div>
+    );
+    if(!ad) return null;
 
     const isSkill = ad.type === 'SKILL';
 

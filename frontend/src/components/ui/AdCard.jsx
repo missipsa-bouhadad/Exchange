@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import UpdateAdModal from "@/components/ui/UpdateAdModal.jsx";
+import RemovalConfirmation from "@/components/ui/RemovalConfirmation.jsx";
 
-const AdCard = ({ ad }) => {
-    const isSkill = ad.type === 'SKILL'; // Vérifie si c'est une compétence
+const AdCard = ({ ad, isUserAd, onDeleteSuccess}) => {
+    const isSkill = ad.type === 'SKILL';
 
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col h-full border border-gray-100">
@@ -49,17 +51,30 @@ const AdCard = ({ ad }) => {
                 </p>
 
                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center text-gray-500 text-sm">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        {ad.location || 'À proximité'}
-                    </div>
+                    { isUserAd ? (
+                        <div className="flex gap-2 w-full justify-end">
+                            <RemovalConfirmation
+                                ad={ad}
+                                onDeleteSuccess={onDeleteSuccess} // <--- PASSAGE DE RELAIS IMPORTANT
+                            />
 
-                    <Link
-                        to={`/ad/${ad._id}`}
-                        className="bg-cyan-950 hover:bg-cyan-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm inline-block text-center"
-                    >
-                        Voir détails
-                    </Link>
+                            <UpdateAdModal ad={ad}/>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="flex items-center text-gray-500 text-sm">
+                                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                {ad.city || 'Inconnue'}
+                            </div>
+
+                            <Link
+                                to={`/ad/${ad._id}`}
+                                className="bg-cyan-950 hover:bg-cyan-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm inline-block text-center"
+                            >
+                                Voir détails
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

@@ -16,7 +16,7 @@ function SideBar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/posts"
+        to="/dashboard/ads"
         className={({ isActive }) =>
           `px-6 py-3 hover:bg-gray-700 transition-colors ${
             isActive ? 'bg-gray-800 font-semibold' : ''
