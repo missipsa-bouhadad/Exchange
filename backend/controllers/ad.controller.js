@@ -6,23 +6,41 @@ import mongoose from "mongoose";
 
 export const createAd=async(req,res)=>{
     try {
-        let { title, description, type, city, user } = req.body;
-        if (!title || !description || !type || !city || !user) {
+        const userId = new mongoose.Types.ObjectId(req.id);
+        const { title, description, type, city } = req.body;
+        const file = req.file;
+
+        if (!title || !description || !type || !city) {
             return res.status(400).json({
                 success: false,
-                message: "All fields are required"
+                message: "Tous les champs sont obligatoires"
             });
         }
 
-        await Ad.create({
-            title,
-            description,
-            type,
-            city,
-            user,
-        });
-
-        return res.status(201).json({
+        if (file){
+            let cloudResponse;
+            const fileUri = getDataUri(req.file);
+            cloudResponse = await cloudinary.uploader.upload(fileUri);
+            if (cloudResponse){
+                await Ad.create({
+                    title,
+                    description,
+                    type,
+                    city,
+                    imageUrl: cloudResponse.secure_url,
+                    user: userId,
+                });
+            }
+        } else {
+            await Ad.create({
+                title,
+                description,
+                type,
+                city,
+                user: userId,
+            });
+        }
+        res.status(201).json({
             success: true,
             message: "Ad created successfully"
         });

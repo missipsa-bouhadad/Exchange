@@ -5,7 +5,7 @@ import { singleUpload } from '../middleware/multer.js'
 
 const router=express.Router()
 
-router.route('/create').post(createAd)
+router.route('/create').post(isAuthenticated,singleUpload,createAd)
 router.route('/ads').get(getAllAds)
 router.route('/:id').get(getAdById)
 router.route('/delete/:id').delete(isAuthenticated, removeAd)

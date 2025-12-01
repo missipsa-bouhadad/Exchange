@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog.jsx";
-import { Button } from "@/components/ui/button.jsx";
+import axios from 'axios';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog.jsx";
 import { Label } from "@/components/ui/label.jsx";
 import { Input } from "@/components/ui/input.jsx";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.jsx";
-import axios from "axios";
+import { Button } from "@/components/ui/button.jsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.jsx";
 import {toast} from "sonner";
 import {useAdForm} from "@/hooks/useAdForm.jsx";
 
-const UpdateAdModal = ({ ad }) => {
+const CreateAdModal = () => {
     const [open, setOpen] = useState(false);
 
     const {
         input,
+        setInput,
         citySuggestions,
         changeEventHandler,
         handleTypeChange,
@@ -20,10 +21,10 @@ const UpdateAdModal = ({ ad }) => {
         selectCity,
         handleFileChange
     } = useAdForm({
-        title: ad.title,
-        description: ad.description,
-        city: ad.city,
-        type: ad.type,
+        title: "",
+        description: "",
+        city: "",
+        type: "GOOD",
         file: null
     });
 
@@ -45,13 +46,14 @@ const UpdateAdModal = ({ ad }) => {
                 withCredentials: true
             });
             if (res.data.success) {
-                window.location.reload();
                 toast.success("Votre annonce a bien été créée !");
+                window.location.reload();
             }
             else {
                 toast.error("Échec de la création de l'annonce.");
             }
             setOpen(false);
+            setInput({ title: "", description: "", city: "", type: "GOOD", file: null });
         } catch (error) {
             console.error(error);
         }
@@ -60,15 +62,24 @@ const UpdateAdModal = ({ ad }) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-cyan-950 hover:bg-cyan-900 text-white text-sm px-4 py-2 h-auto">
-                    Modifier
-                </Button>
+                <button
+                    className="fixed bottom-8 right-8 z-50 bg-cyan-950 hover:bg-cyan-800 text-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
+                    title="Créer une annonce"
+                >
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap group-hover:ml-2 font-bold">
+                        Créer une annonce
+                    </span>
+                </button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Modifier l'annonce</DialogTitle>
+                    <DialogTitle>Créer une annonce</DialogTitle>
                 </DialogHeader>
+
                 <form onSubmit={submitHandler} className="grid gap-4 py-4">
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="title">Titre de l'annonce</Label>
@@ -152,8 +163,11 @@ const UpdateAdModal = ({ ad }) => {
                             </ul>
                         )}
                     </div>
-                    <DialogFooter>
-                        <Button type="submit" className="bg-cyan-950">Sauvegarder</Button>
+
+                    <DialogFooter className="mt-4">
+                        <Button type="submit" className="bg-cyan-950 hover:bg-cyan-800 w-full sm:w-auto">
+                            Publier l'annonce
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -161,4 +175,4 @@ const UpdateAdModal = ({ ad }) => {
     );
 };
 
-export default UpdateAdModal;
+export default CreateAdModal;
