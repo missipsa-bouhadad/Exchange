@@ -37,10 +37,10 @@ const router=createBrowserRouter([
     path:'/about',
     element:<><NavBar/><About/></>
   },
-    {
-        path:'/ad/:id',
-        element:<><NavBar/><AdDetail/></>
-    },
+  {
+    path:'/ad/:id',
+    element:<><NavBar/><AdDetail/></>
+  },
   {
     path:'/dashboard',
     element:<><NavBar/><Dashboard/></>,

@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import connectDB from './database/db.js'
 import userRoute from './routes/user.route.js'
+import chatRoute from "./routes/chat.route.js";
 import adRoute from './routes/ad.route.js'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -19,7 +20,8 @@ app.use(cors({
 
 const PORT=process.env.PORT || 3000
 
-app.use('/api/v1/user', userRoute)
+app.use('/api/v1/user',userRoute)
+app.use("/api/v1/chats", chatRoute);
 app.use('/api/v1/ad', adRoute)
 
 app.listen(PORT,()=>{

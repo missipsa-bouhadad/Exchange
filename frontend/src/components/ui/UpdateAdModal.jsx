@@ -3,7 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Button } from "@/components/ui/button.jsx";
 import { Label } from "@/components/ui/label.jsx";
 import { Input } from "@/components/ui/input.jsx";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.jsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+
 import axios from "axios";
 import {toast} from "sonner";
 import {useAdForm} from "@/hooks/useAdForm.jsx";

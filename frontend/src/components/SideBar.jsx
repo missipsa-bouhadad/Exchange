@@ -8,7 +8,7 @@ function SideBar() {
         to="/dashboard/profile"
         className={({ isActive }) =>
           `px-6 py-3 hover:bg-gray-700 transition-colors ${
-            isActive ? 'bg-gray-800 font-semibold' : ''
+            isActive ? "bg-gray-800 font-semibold" : ""
           }`
         }
       >
@@ -19,7 +19,7 @@ function SideBar() {
         to="/dashboard/ads"
         className={({ isActive }) =>
           `px-6 py-3 hover:bg-gray-700 transition-colors ${
-            isActive ? 'bg-gray-800 font-semibold' : ''
+            isActive ? "bg-gray-800 font-semibold" : ""
           }`
         }
       >
@@ -30,7 +30,7 @@ function SideBar() {
         to="/dashboard/demandes"
         className={({ isActive }) =>
           `px-6 py-3 hover:bg-gray-700 transition-colors ${
-            isActive ? 'bg-gray-800 font-semibold' : ''
+            isActive ? "bg-gray-800 font-semibold" : ""
           }`
         }
       >
@@ -41,14 +41,16 @@ function SideBar() {
         to="/dashboard/create"
         className={({ isActive }) =>
           `px-6 py-3 hover:bg-gray-700 transition-colors ${
-            isActive ? 'bg-gray-800 font-semibold' : ''
+            isActive ? "bg-gray-800 font-semibold" : ""
           }`
         }
       >
-        Publish 
+        Publish
       </NavLink>
+
+      
     </div>
-  )
+  );
 }
 
 export default SideBar
