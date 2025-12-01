@@ -6,61 +6,26 @@ import { Input } from "@/components/ui/input.jsx";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.jsx";
 import axios from "axios";
 import {toast} from "sonner";
+import {useAdForm} from "@/hooks/useAdForm.jsx";
 
 const UpdateAdModal = ({ ad }) => {
     const [open, setOpen] = useState(false);
 
-    const [input, setInput] = useState({
+    const {
+        input,
+        citySuggestions,
+        changeEventHandler,
+        handleTypeChange,
+        handleCityChange,
+        selectCity,
+        handleFileChange
+    } = useAdForm({
         title: ad.title,
         description: ad.description,
         city: ad.city,
         type: ad.type,
-        file: ad.file
+        file: null
     });
-
-    const [citySuggestions, setCitySuggestions] = useState([]);
-
-    const changeEventHandler = (e) => {
-        setInput({ ...input, [e.target.name]: e.target.value });
-    };
-
-    const handleTypeChange = (value) => {
-        setInput((prev) => ({
-            ...prev,
-            type: value,
-            file: value === 'SKILL' ? null : prev.file
-        }));
-    };
-
-    const handleCityChange = async (e) => {
-        const value = e.target.value;
-        setInput({ ...input, city: value });
-
-        if (value.length > 2) {
-            try {
-                const response = await axios.get(`https://geo.api.gouv.fr/communes?nom=${value}&fields=nom,codesPostaux&limit=5`);
-                setCitySuggestions(response.data);
-            } catch (error) {
-                console.error("Erreur API Géo", error);
-            }
-        } else {
-            setCitySuggestions([]);
-        }
-    };
-
-    const selectCity = (cityName, zipCode) => {
-        setInput({ ...input, city: `${cityName} (${zipCode})` });
-        setCitySuggestions([]);
-    };
-
-    const handleFileChange = (e) => {
-        if (e.target.files?.[0]) {
-            setInput((prev) => ({
-                ...prev,
-                file: e.target.files[0],
-            }));
-        }
-    };
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -87,7 +52,6 @@ const UpdateAdModal = ({ ad }) => {
                 toast.error("Échec de la création de l'annonce.");
             }
             setOpen(false);
-            setInput({ title: "", description: "", city: "", type: "GOOD", file: null });
         } catch (error) {
             console.error(error);
         }
@@ -95,7 +59,6 @@ const UpdateAdModal = ({ ad }) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            {/* Le bouton qui déclenche l'ouverture */}
             <DialogTrigger asChild>
                 <Button className="bg-cyan-950 hover:bg-cyan-900 text-white text-sm px-4 py-2 h-auto">
                     Modifier

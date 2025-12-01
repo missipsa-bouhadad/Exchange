@@ -6,61 +6,27 @@ import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.jsx";
 import {toast} from "sonner";
+import {useAdForm} from "@/hooks/useAdForm.jsx";
 
 const CreateAdModal = () => {
     const [open, setOpen] = useState(false);
 
-    const [input, setInput] = useState({
+    const {
+        input,
+        setInput,
+        citySuggestions,
+        changeEventHandler,
+        handleTypeChange,
+        handleCityChange,
+        selectCity,
+        handleFileChange
+    } = useAdForm({
         title: "",
         description: "",
         city: "",
         type: "GOOD",
         file: null
     });
-
-    const [citySuggestions, setCitySuggestions] = useState([]);
-
-    const changeEventHandler = (e) => {
-        setInput({ ...input, [e.target.name]: e.target.value });
-    };
-
-    const handleTypeChange = (value) => {
-        setInput((prev) => ({
-            ...prev,
-            type: value,
-            file: value === 'SKILL' ? null : prev.file
-        }));
-    };
-
-    const handleCityChange = async (e) => {
-        const value = e.target.value;
-        setInput({ ...input, city: value });
-
-        if (value.length > 2) {
-            try {
-                const response = await axios.get(`https://geo.api.gouv.fr/communes?nom=${value}&fields=nom,codesPostaux&limit=5`);
-                setCitySuggestions(response.data);
-            } catch (error) {
-                console.error("Erreur API Géo", error);
-            }
-        } else {
-            setCitySuggestions([]);
-        }
-    };
-
-    const selectCity = (cityName, zipCode) => {
-        setInput({ ...input, city: `${cityName} (${zipCode})` });
-        setCitySuggestions([]);
-    };
-
-    const handleFileChange = (e) => {
-        if (e.target.files?.[0]) {
-            setInput((prev) => ({
-                ...prev,
-                file: e.target.files[0],
-            }));
-        }
-    };
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -80,8 +46,8 @@ const CreateAdModal = () => {
                 withCredentials: true
             });
             if (res.data.success) {
-                window.location.reload();
                 toast.success("Votre annonce a bien été créée !");
+                window.location.reload();
             }
             else {
                 toast.error("Échec de la création de l'annonce.");
