@@ -89,6 +89,24 @@ export const getAdById = async (req, res) => {
     }
 };
 
+export const getUserOfAd = async (req, res) => {
+  try {
+    const adId = new mongoose.Types.ObjectId(req.params.id);
+    const ad = await Ad.findById(adId).populate("user", "-password");
+    if (!ad) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Annonce introuvable" });
+    }
+    return res.status(200).json({ success: true, user: ad.user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Erreur serveur", error });
+  }
+};
+
+
 export const removeAd = async (req, res) => {
     try {
         const userId = req.id

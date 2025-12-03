@@ -10,6 +10,7 @@ const AdDetail = () => {
     const [ad, setAd] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedAdUser, setSelectedAdUser] = useState(null);
 
     useEffect(() => {
         const fetchAdDetail = async () => {
@@ -26,6 +27,32 @@ const AdDetail = () => {
         };
         fetchAdDetail();
     }, [id]);
+    
+    const handleShowUser = async () => {
+      if (!ad?.user?._id) {
+        console.log("Utilisateur non disponible");
+        return;
+      }
+
+      setSelectedAdUser(ad.user);
+
+      try {
+        const { data } = await axios.post(
+          "http://localhost:8000/api/v1/chats",
+          { otherUserId: ad.user._id },
+          { withCredentials: true }
+        );
+
+        if (data.success) {
+          console.log("Conversation créée:", data.data);
+          navigate(`/dashboard/demandes`, {
+            state: { selectedChatId: data.data._id },
+          });
+        }
+      } catch (error) {
+        console.error("Erreur création chat:", error);
+      }
+    };
 
     if (loading) return <div className="flex justify-center mt-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
     //if (error) return <div className="text-center mt-20 text-red-500 font-bold">{error}</div>;
@@ -53,83 +80,156 @@ const AdDetail = () => {
     const isAvailable = ad.status === 'AVAILABLE';
 
     return (
-        <div className="container mx-auto px-4 py-25 max-w-5xl">
-            <button
-                onClick={() => navigate(-1)}
-                className="mb-6 flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-            >
-                <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Retour aux annonces
-            </button>
+      <div className="container mx-auto px-4 py-25 max-w-5xl">
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-6 flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+        >
+          <svg
+            className="w-5 h-5 mr-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
+          </svg>
+          Retour aux annonces
+        </button>
 
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                <div className="grid grid-cols-1 md:grid-cols-2">
-
-                    {/* COLONNE GAUCHE : VISUEL */}
-                    <div className="h-64 md:h-auto relative">
-                        {isSkill || !ad.imageUrl ? (
-                            <div className={`w-full h-full bg-cyan-800 flex items-center justify-center p-10`}>
-                                <svg className="w-32 h-32 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                        ) : (
-                            <img
-                                src={ad.imageUrl || "https://via.placeholder.com/600x600?text=Pas+d'image"}
-                                alt={ad.title}
-                                className="w-full h-full object-cover"
-                            />
-                        )}
-                        {/* Badge Type */}
-                        <span className={`absolute top-4 left-4 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md ${isSkill ? 'bg-black/20 backdrop-blur-md' : 'bg-green-600'}`}>
-                {isSkill ? 'Compétence à offrir' : 'Objet à prêter/donner'}
-            </span>
-                    </div>
-
-                    {/* COLONNE DROITE : INFOS */}
-                    <div className="p-8 flex flex-col justify-between">
-                        <div>
-                            <div className="flex justify-between items-start mb-4">
-                <span className={`text - sm font-bold text-white uppercase tracking-wide ${isAvailable ? 'bg-green-800' : 'bg-red-800'} px-3 py-1 rounded-md`}>
-                  {ad.status === 'AVAILABLE' ? 'Disponible' : 'Indisponible'}
-                </span>
-                                <span className="text-gray-400 text-sm flex items-center">
-                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Publié récemment
-                </span>
-                            </div>
-
-                            <h1 className="text-3xl font-extrabold text-gray-900 mb-4">{ad.title}</h1>
-
-                            <div className="prose text-gray-600 mb-6">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-2">Description</h3>
-                                <p className="whitespace-pre-line leading-relaxed">{ad.description}</p>
-                            </div>
-
-                            <div className="flex items-center text-gray-700 font-medium mb-8 bg-gray-50 p-4 rounded-lg">
-                                <svg className="w-6 h-6 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                {ad.city || 'Localisation non spécifiée'}
-                            </div>
-                        </div>
-
-                        {/* Actions / Footer */}
-                        <div className="border-t pt-6">
-                            {/* Ici, tu pourras ajouter la photo de l'auteur plus tard */}
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-gray-500">Proposé par</p>
-                                    <p className="font-bold text-gray-900">{ad.user.firstName} {ad.user.lastName}</p>
-                                </div>
-                                <button className="bg-cyan-950 hover:bg-cyan-800 text-white font-bold py-3 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl">
-                                    Contacter / Échanger
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+          
+            <div className="h-64 md:h-auto relative">
+              {isSkill || !ad.imageUrl ? (
+                <div
+                  className={`w-full h-full bg-cyan-800 flex items-center justify-center p-10`}
+                >
+                  <svg
+                    className="w-32 h-32 text-white opacity-90"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
                 </div>
+              ) : (
+                <img
+                  src={
+                    ad.imageUrl ||
+                    "https://via.placeholder.com/600x600?text=Pas+d'image"
+                  }
+                  alt={ad.title}
+                  className="w-full h-full object-cover"
+                />
+              )}
+              <span
+                className={`absolute top-4 left-4 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md ${
+                  isSkill ? "bg-black/20 backdrop-blur-md" : "bg-green-600"
+                }`}
+              >
+                {isSkill ? "Compétence à offrir" : "Objet à prêter/donner"}
+              </span>
             </div>
+
+           
+            <div className="p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <span
+                    className={`text - sm font-bold text-white uppercase tracking-wide ${
+                      isAvailable ? "bg-green-800" : "bg-red-800"
+                    } px-3 py-1 rounded-md`}
+                  >
+                    {ad.status === "AVAILABLE" ? "Disponible" : "Indisponible"}
+                  </span>
+                  <span className="text-gray-400 text-sm flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    Publié récemment
+                  </span>
+                </div>
+
+                <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
+                  {ad.title}
+                </h1>
+
+                <div className="prose text-gray-600 mb-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Description
+                  </h3>
+                  <p className="whitespace-pre-line leading-relaxed">
+                    {ad.description}
+                  </p>
+                </div>
+
+                <div className="flex items-center text-gray-700 font-medium mb-8 bg-gray-50 p-4 rounded-lg">
+                  <svg
+                    className="w-6 h-6 mr-3 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    ></path>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    ></path>
+                  </svg>
+                  {ad.city || "Localisation non spécifiée"}
+                </div>
+              </div>
+
+          
+              <div className="border-t pt-6">
+               
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">Proposé par</p>
+                    <p className="font-bold text-gray-900">
+                      {ad.user.firstName} {ad.user.lastName}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleShowUser}
+                    className="bg-cyan-950 hover:bg-cyan-800 text-white font-bold py-3 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    Contacter
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     );
 };
 

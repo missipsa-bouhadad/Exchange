@@ -48,7 +48,6 @@ const UserAnnouncements = () => {
 
     return (
         <div className="container mx-auto px-4 py-25">
-            {/* Titre de la section */}
             <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
                     Vos Annonces
@@ -63,7 +62,6 @@ const UserAnnouncements = () => {
                     Vous n'avez pas encore publié d'annonces.
                 </div>
             ) : (
-                /* Grille Responsive Tailwind */
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {ads.map((ad) => (
                         <AdCard key={ad._id} ad={ad} isUserAd={user._id === ad.user} onDeleteSuccess={removeAdFromList}/>
@@ -76,12 +74,9 @@ const UserAnnouncements = () => {
                 className="fixed bottom-8 right-8 z-50 bg-cyan-950 hover:bg-cyan-800 text-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
                 title="Créer une annonce"
             >
-                {/* Icône Plus (+) */}
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-
-                {/* Texte qui apparaît au survol (Optionnel, effet sympa) */}
                 <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap group-hover:ml-2 font-bold">
                     Créer une annonce
                 </span>

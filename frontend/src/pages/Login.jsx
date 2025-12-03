@@ -20,8 +20,6 @@ const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false)
-
-  // ✅ Renommé pour éviter le conflit avec Redux setUser
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -51,7 +49,6 @@ const Login = () => {
 
       if (res.data.success) {
         toast.success(res.data.message)
-        // ✅ Ici on utilise bien le setUser Redux
         dispatch(setUser(res.data.user))
         navigate("/")
       }
@@ -86,7 +83,6 @@ const Login = () => {
                 />
               </div>
 
-              {/* Champ Password */}
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
@@ -122,7 +118,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* ✅ Bouton de connexion */}
             <Button type="submit" className="w-full bg-cyan-950">
               Login
             </Button>
