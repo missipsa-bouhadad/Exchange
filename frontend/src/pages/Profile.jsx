@@ -22,12 +22,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "@/redux/authSlice";
 import store from "@/redux/store";
 import { toast } from "sonner";
 import axios from "axios";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const [open,setOpen]=useState(false)
   const { user } = useSelector((state) => state.auth);
   const [input, setInput] = useState({
@@ -87,6 +89,7 @@ const Profile = () => {
 
     if (res.data.success) {
       toast.success(res.data.message);
+      dispatch(setUser(res.data.user));
       setOpen(false)
     }
   } catch (error) {
@@ -99,9 +102,7 @@ const Profile = () => {
   return (
     <div className="pt-20 md:h-screen bg-gray-50 dark:bg-gray-900">
       <div className="w-full mx-auto mt-4">
-        {/* Profil principal */}
         <Card className="flex md:flex-row flex-col items-center gap-10 p-6 md:p-10 mx-4 md:mx-0 dark:bg-gray-800">
-          {/* Avatar */}
           <div className="flex flex-col items-center md:items-start">
             <Avatar className="h-40 w-40 rounded-full border-2 border-gray-300 dark:border-gray-700">
               <AvatarImage
@@ -115,7 +116,6 @@ const Profile = () => {
             </Avatar>
           </div>
 
-          {/* Infos utilisateur */}
           <div className="flex flex-col gap-3 w-full">
             <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {input.firstName} {input.lastName}

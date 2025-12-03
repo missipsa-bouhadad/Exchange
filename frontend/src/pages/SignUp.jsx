@@ -136,7 +136,6 @@ const SignUp = () => {
                 </div>
               </div>
             </div>
-            {/*le button qui va déclancher le handleSubmit */}
             <Button type="submit" className="w-full bg-cyan-950">
               Sign Up
             </Button>
