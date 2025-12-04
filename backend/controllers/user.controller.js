@@ -5,8 +5,8 @@ import cloudinary from '../utils/cloudinary.js'
 import getDataUri from '../utils/dataUri.js'
 export const register = async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body
-        if (!email || !firstName || !lastName || !password) {
+        const { firstName, lastName, email, password ,bio,location} = req.body
+        if (!email || !firstName || !lastName || !password || !bio) {
             return res.status(400).json({
                 success: false,
                 message: "all fiels are required"
@@ -36,7 +36,7 @@ export const register = async (req, res) => {
         }
         const hashPassword = await bcrypt.hash(password, 10)
         await User.create({
-            firstName, lastName, email, password: hashPassword
+            firstName, lastName, email, password: hashPassword,bio,location
         })
 
         return res.status(201).json({
@@ -109,7 +109,7 @@ export const logout=async(_,res)=>{
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const { firstName, lastName, email, password, tel, facebook, adresse } = req.body;
+    const { firstName, lastName, email, password, tel,bio, location } = req.body;
     const file = req.file;
 
     let cloudResponse;
@@ -134,8 +134,8 @@ export const updateProfile = async (req, res) => {
     if (email) user.email = email;
     if (password) user.password = password;
     if (tel) user.tel = tel;
-    if (facebook) user.facebook = facebook;
-    if (adresse) user.adresse = adresse;
+    if (bio) user.bio = bio;
+    if (location) user.location = location;
 
     // update photo seulement si nouvelle image
     if (cloudResponse) {
