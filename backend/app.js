@@ -6,6 +6,7 @@ import cors from "cors";
 import userRoute from "./routes/user.route.js";
 import chatRoute from "./routes/chat.route.js";
 import adRoute from "./routes/ad.route.js";
+import requestRoute from "./routes/request.route.js";
 
 dotenv.config()
 const app=express()
@@ -21,5 +22,7 @@ app.use(cors({
 app.use('/api/v1/user',userRoute)
 app.use("/api/v1/chats", chatRoute);
 app.use('/api/v1/ad', adRoute)
+app.use("/api/v1/requests", requestRoute);
+
 
 export default app;

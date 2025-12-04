@@ -18,11 +18,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
+import { Bell } from "lucide-react";
+import { useState, useEffect } from "react";
+
 
 const NavBar = () => {
   const { user } = useSelector(store => store.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [notifications, setNotifications] = useState([]);
+  const [openNotif, setOpenNotif] = useState(false);
+
 
   const logoutHandler = async (e) => {
     try {
@@ -49,8 +55,6 @@ const NavBar = () => {
   return (
     <div className="py-4 fixed w-full shadow bg-cyan-950 text-white z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
-
-        {/* --- Logo + Search --- */}
         <div className="flex items-center gap-6">
           <Link to="/">
             <div className="flex items-center gap-2">
@@ -59,33 +63,31 @@ const NavBar = () => {
           </Link>
 
           <div className="relative hidden md:flex items-center w-[320px]">
-            <Input
-              type="text"
-              placeholder="Search..."
-              className="pr-10"
-            />
+            <Input type="text" placeholder="Search..." className="pr-10" />
             <Button className="absolute right-0 bg-cyan-900" size="icon">
               <Search className="w-4 h-4" />
             </Button>
           </div>
         </div>
-
-        {/* --- Liens + Boutons utilisateur --- */}
         <div className="flex items-center gap-6">
-          {/* Navigation Links */}
           <nav>
             <ul className="flex items-center gap-6 font-medium">
-              <Link to="/"><li className="hover:text-cyan-300 cursor-pointer">Home</li></Link>
-              <Link to="/announcements"><li className="hover:text-cyan-300 cursor-pointer">Announcements</li></Link>
-              <Link to="/about"><li className="hover:text-cyan-300 cursor-pointer">About</li></Link>
+              <Link to="/">
+                <li className="hover:text-cyan-300 cursor-pointer">Home</li>
+              </Link>
+              <Link to="/announcements">
+                <li className="hover:text-cyan-300 cursor-pointer">
+                  Announcements
+                </li>
+              </Link>
+              <Link to="/about">
+                <li className="hover:text-cyan-300 cursor-pointer">About</li>
+              </Link>
             </ul>
           </nav>
 
-          {/* Login / Sign up */}
           {user ? (
-            <div className='ml-7 flex gap-3 items-center'>
-              {/* Espace pour menu utilisateur connecté */}
-
+            <div className="ml-7 flex gap-3 items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
@@ -109,34 +111,43 @@ const NavBar = () => {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/create">Create</Link>
+                    <Link to="/dashboard/requests">requests</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={logoutHandler} className="text-red-600 focus:text-red-700">
+                  <DropdownMenuItem
+                    onClick={logoutHandler}
+                    className="text-red-600 focus:text-red-700"
+                  >
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              
 
-              <Button className="bg-white text-cyan-950 hover:bg-gray-100" onClick={logoutHandler}>Logout</Button>
-
-
-
+              {/*<Button
+                className="bg-white text-cyan-950 hover:bg-gray-100"
+                onClick={logoutHandler}
+              >
+                Logout
+              </Button>*/}
             </div>
           ) : (
             <div className="flex gap-2">
               <Link to="/login">
-                <Button className="bg-white text-cyan-950 hover:bg-gray-100">Login</Button>
+                <Button className="bg-white text-cyan-950 hover:bg-gray-100">
+                  Login
+                </Button>
               </Link>
               <Link to="/signup">
-                <Button className="bg-cyan-800 hover:bg-cyan-700 text-white">Sign Up</Button>
+                <Button className="bg-cyan-800 hover:bg-cyan-700 text-white">
+                  Sign Up
+                </Button>
               </Link>
             </div>
           )}
         </div>
-
       </div>
     </div>
-  )
+  );
 }
 
 export default NavBar

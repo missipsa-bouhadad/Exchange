@@ -11,63 +11,118 @@ import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Posts from './pages/Posts'
 import Demandes from './pages/Demandes'
-import Create from './pages/Create'
+import Requests from "./pages/Requests";
 import AdDetail from "@/pages/AdDetail.jsx";
 import UserAnnouncements from "@/pages/UserAnnouncements.jsx";
 
-const router=createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path:'/',
-    element:<><NavBar/><Home/></>
+    path: "/",
+    element: (
+      <>
+        <NavBar />
+        <Home />
+      </>
+    ),
   },
-  
+
   {
-    path:'/announcements',
-    element:<><NavBar/><Announcements/></>
-  },
-  {
-    path:'/login',
-    element:<><NavBar/><Login/></>
-  },
-  {
-    path:'/signup',
-    element:<><NavBar/><SignUp/></>
-  },
-  {
-    path:'/about',
-    element:<><NavBar/><About/></>
+    path: "/announcements",
+    element: (
+      <>
+        <NavBar />
+        <Announcements />
+      </>
+    ),
   },
   {
-    path:'/ad/:id',
-    element:<><NavBar/><AdDetail/></>
+    path: "/login",
+    element: (
+      <>
+        <NavBar />
+        <Login />
+      </>
+    ),
   },
   {
-    path:'/dashboard',
-    element:<><NavBar/><Dashboard/></>,
-    children:[
+    path: "/signup",
+    element: (
+      <>
+        <NavBar />
+        <SignUp />
+      </>
+    ),
+  },
+  {
+    path: "/about",
+    element: (
+      <>
+        <NavBar />
+        <About />
+      </>
+    ),
+  },
+  {
+    path: "/ad/:id",
+    element: (
+      <>
+        <NavBar />
+        <AdDetail />
+      </>
+    ),
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <>
+        <NavBar />
+        <Dashboard />
+      </>
+    ),
+    children: [
       {
-        path:"profile",
-        element:<><Profile/></>
+        path: "profile",
+        element: (
+          <>
+            <Profile />
+          </>
+        ),
       },
       {
-        path:"ads",
-        element:<><UserAnnouncements/></>
+        path: "ads",
+        element: (
+          <>
+            <UserAnnouncements />
+          </>
+        ),
       },
       {
-        path:"posts",
-        element:<><Posts/></>
+        path: "posts",
+        element: (
+          <>
+            <Posts />
+          </>
+        ),
       },
       {
-        path:"demandes",
-        element:<><Demandes/></>
+        path: "demandes",
+        element: (
+          <>
+            <Demandes />
+          </>
+        ),
       },
       {
-        path:"create",
-        element:<><Create/></>
-      }
-  ]
-  }
-])
+        path: "requests",
+        element: (
+          <>
+            <Requests/>
+          </>
+        ),
+      },
+    ],
+  },
+]);
 
 const App = () => {
   return (

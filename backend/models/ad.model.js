@@ -36,7 +36,7 @@ const adSchema=mongoose.Schema({
 
 
 
-},{timestamps:true}) //timestamps pour ajouter createdAt et updatedAt
+},{timestamps:true})
 
 
 export const Ad=mongoose.model("Ad",adSchema)
