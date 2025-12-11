@@ -35,6 +35,10 @@ const adSchema=mongoose.Schema({
         type: Date,
         required: true
     },
+    exchangeWith: {
+        type: String,
+        default: ""
+    },
     status: {
         type: String,
         enum: ["AVAILABLE", "EXCHANGED"],

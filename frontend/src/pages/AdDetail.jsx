@@ -209,6 +209,18 @@ const AdDetail = () => {
                 </p>
               </div>
 
+                {ad.exchangeWith && (
+                    <div className="my-6 bg-cyan-50 border border-cyan-100 p-4 rounded-lg">
+                        <h3 className="text-sm font-bold text-cyan-900 uppercase mb-1 flex items-center">
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            Souhaité en échange
+                        </h3>
+                        <p className="text-gray-700 italic">
+                            "{ad.exchangeWith}"
+                        </p>
+                    </div>
+                )}
+
               <div className="flex items-center text-gray-700 font-medium mb-2 bg-gray-50 p-4 rounded-lg">
                 <svg
                   className="w-6 h-6 mr-3 text-blue-500"

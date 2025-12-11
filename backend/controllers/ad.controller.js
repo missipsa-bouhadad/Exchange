@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 export const createAd=async(req,res)=>{
     try {
         const userId = new mongoose.Types.ObjectId(req.id);
-        const { title, description, type, city, availabilityStart, availabilityEnd } = req.body;
+        const { title, description, type, city, availabilityStart, availabilityEnd, exchangeWith} = req.body;
 
         if (new Date(availabilityStart) > new Date(availabilityEnd)) {
             return res.status(400).json({ message: "La date de fin doit être après la date de début." });
@@ -33,7 +33,8 @@ export const createAd=async(req,res)=>{
                     imageUrl: cloudResponse.secure_url,
                     user: userId,
                     availabilityStart,
-                    availabilityEnd
+                    availabilityEnd,
+                    exchangeWith
                 });
             }
         } else {
@@ -44,7 +45,8 @@ export const createAd=async(req,res)=>{
                 city,
                 user: userId,
                 availabilityStart,
-                availabilityEnd
+                availabilityEnd,
+                exchangeWith
             });
         }
         res.status(201).json({

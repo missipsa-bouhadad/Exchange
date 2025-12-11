@@ -28,6 +28,7 @@ const CreateAdModal = ({userLocation}) => {
         type: "GOOD",
         availabilityStart: minDate,
         availabilityEnd: minDate,
+        exchangeWith: "",
         file: null
     });
 
@@ -41,6 +42,7 @@ const CreateAdModal = ({userLocation}) => {
         formData.append("type", input.type);
         formData.append("availabilityStart", input.availabilityStart);
         formData.append("availabilityEnd", input.availabilityEnd);
+        formData.append("exchangeWith", input.exchangeWith);
         if (input.file && input.type === 'GOOD' && input.file instanceof File) {
             formData.append("file", input.file);
         }
@@ -142,6 +144,17 @@ const CreateAdModal = ({userLocation}) => {
                         />
                     </div>
 
+                    <div className="flex flex-col gap-1">
+                        <Label htmlFor="exchangeWith">Ce que je souhaite en échange <span className="text-gray-400 font-normal">(Optionnel)</span></Label>
+                        <Input
+                            id="exchangeWith"
+                            name="exchangeWith"
+                            value={input.exchangeWith}
+                            onChange={changeEventHandler}
+                            placeholder="Ex: Un coup de main pour déménager, des légumes du jardin..."
+                        />
+                    </div>
+
                     <div className="flex flex-col gap-1 relative">
                         <Label htmlFor="city">Ville</Label>
                         <Input
@@ -159,7 +172,7 @@ const CreateAdModal = ({userLocation}) => {
                                 {citySuggestions.map((city) => (
                                     <li
                                         key={city.code}
-                                        onClick={() => selectCity(city.nom, city.codesPostaux[0])}
+                                        onClick={() => selectCity(city.nom)}
                                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm transition-colors"
                                     >
                                         {city.nom} <span className="text-gray-500">({city.codesPostaux[0]})</span>
