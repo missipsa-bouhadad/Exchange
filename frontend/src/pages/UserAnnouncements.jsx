@@ -15,6 +15,16 @@ const UserAnnouncements = () => {
         setAds(ads.filter(ad => ad._id !== deletedAdId));
     };
 
+    const addAdToList = (newAd) => {
+        setAds((prevAds) => [newAd, ...prevAds]);
+    };
+
+    const updateAdInList = (updatedAd) => {
+        setAds((prevAds) =>
+            prevAds.map((ad) => ad._id === updatedAd._id ? updatedAd : ad)
+        );
+    };
+
     useEffect(() => {
         const fetchAds = async () => {
             try {
@@ -34,7 +44,6 @@ const UserAnnouncements = () => {
         fetchAds();
     }, []);
 
-    // Affichage du chargement avec une animation Tailwind (pulse)
     if (loading) return (
         <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -65,12 +74,17 @@ const UserAnnouncements = () => {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {ads.map((ad) => (
-                        <AdCard key={ad._id} ad={ad} isUserAd={user._id === ad.user} onDeleteSuccess={removeAdFromList}/>
+                        <AdCard key={ad._id}
+                                ad={ad}
+                                isUserAd={user._id === ad.user}
+                                onDeleteSuccess={removeAdFromList}
+                                onUpdateSuccess={updateAdInList}
+                        />
                     ))}
                 </div>
             )}
 
-            <CreateAdModal userLocation={user.location}/>
+            <CreateAdModal userLocation={user.location} onCreateSuccess={addAdToList}/>
         </div>
     );
 };

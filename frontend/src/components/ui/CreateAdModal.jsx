@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {toast} from "sonner";
 import {useAdForm} from "@/hooks/useAdForm.jsx";
 
-const CreateAdModal = ({userLocation}) => {
+const CreateAdModal = ({userLocation, onCreateSuccess}) => {
     const [open, setOpen] = useState(false);
     const minDate = new Date().toISOString().split("T")[0];
 
@@ -54,7 +54,7 @@ const CreateAdModal = ({userLocation}) => {
             });
             if (res.data.success) {
                 toast.success("Votre annonce a bien été créée !");
-                window.location.reload();
+                onCreateSuccess(res.data.ad);
             }
             else {
                 toast.error("Échec de la création de l'annonce.");
