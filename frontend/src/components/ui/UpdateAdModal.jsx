@@ -9,7 +9,7 @@ import axios from "axios";
 import {toast} from "sonner";
 import {useAdForm} from "@/hooks/useAdForm.jsx";
 
-const UpdateAdModal = ({ ad }) => {
+const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
     const [open, setOpen] = useState(false);
     const minDate = new Date().toISOString().split("T")[0];
 
@@ -53,16 +53,20 @@ const UpdateAdModal = ({ ad }) => {
         }
 
         try {
-            const res = await axios.post("http://localhost:8000/api/v1/ad/create", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-                withCredentials: true
-            });
+            const res = await axios.put(
+                `http://localhost:8000/api/v1/ad/update/${ad._id}`,
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    withCredentials: true
+                }
+            );
             if (res.data.success) {
-                window.location.reload();
-                toast.success("Votre annonce a bien été créée !");
+                onUpdateSuccess(res.data.ad)
+                toast.success(res.data.message);
             }
             else {
-                toast.error("Échec de la création de l'annonce.");
+                toast.error(res.data.message);
             }
             setOpen(false);
         } catch (error) {

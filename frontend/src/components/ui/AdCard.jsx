@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import UpdateAdModal from "@/components/ui/UpdateAdModal.jsx";
 import RemovalConfirmation from "@/components/ui/RemovalConfirmation.jsx";
 
-const AdCard = ({ ad, isUserAd, onDeleteSuccess}) => {
+const AdCard = ({ ad, isUserAd, onDeleteSuccess, onUpdateSuccess}) => {
     const isSkill = ad.type === 'SKILL';
 
     const formatDate = (dateString) => {
@@ -66,7 +66,10 @@ const AdCard = ({ ad, isUserAd, onDeleteSuccess}) => {
                                 onDeleteSuccess={onDeleteSuccess}
                             />
 
-                            <UpdateAdModal ad={ad}/>
+                            <UpdateAdModal
+                                ad={ad}
+                                onUpdateSuccess={onUpdateSuccess}
+                            />
                         </div>
                     ) : (
                         <>
