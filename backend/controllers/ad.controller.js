@@ -1,13 +1,16 @@
 import { Ad } from '../models/ad.model.js'
 import cloudinary from '../utils/cloudinary.js'
 import getDataUri from '../utils/dataUri.js'
-import {User} from "../models/user.model.js";
 import mongoose from "mongoose";
 
 export const createAd=async(req,res)=>{
     try {
         const userId = new mongoose.Types.ObjectId(req.id);
-        const { title, description, type, city } = req.body;
+        const { title, description, type, city, availabilityStart, availabilityEnd, exchangeWith} = req.body;
+
+        if (new Date(availabilityStart) > new Date(availabilityEnd)) {
+            return res.status(400).json({ message: "La date de fin doit être après la date de début." });
+        }
         const file = req.file;
 
         if (!title || !description || !type || !city) {
@@ -29,6 +32,9 @@ export const createAd=async(req,res)=>{
                     city,
                     imageUrl: cloudResponse.secure_url,
                     user: userId,
+                    availabilityStart,
+                    availabilityEnd,
+                    exchangeWith
                 });
             }
         } else {
@@ -38,6 +44,9 @@ export const createAd=async(req,res)=>{
                 type,
                 city,
                 user: userId,
+                availabilityStart,
+                availabilityEnd,
+                exchangeWith
             });
         }
         res.status(201).json({

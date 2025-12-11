@@ -10,7 +10,6 @@ const AdDetail = () => {
   const [ad, setAd] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedAdUser, setSelectedAdUser] = useState(null);
   const [showRequestInput, setShowRequestInput] = useState(false);
   const [requestedObject, setRequestedObject] = useState("");
 
@@ -21,8 +20,6 @@ const AdDetail = () => {
           `http://localhost:8000/api/v1/ad/${id}`
         );
         setAd(response.data);
-        // Le console.log(ad) ici verra la valeur précédente, mais la mise à jour est en cours
-        // console.log(ad)
         setLoading(false);
       } catch (err) {
         console.error("Erreur:", err);
@@ -48,8 +45,8 @@ const AdDetail = () => {
 
       if (data.success) {
         alert("Votre demande a été envoyée !");
-        setShowRequestInput(false); // Fermer après l'envoi
-        setRequestedObject(""); // Réinitialiser le champ
+        setShowRequestInput(false);
+        setRequestedObject("");
       }
     } catch (error) {
       console.error("Erreur envoi request:", error);
@@ -63,7 +60,7 @@ const AdDetail = () => {
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
-  //if (error) return <div className="text-center mt-20 text-red-500 font-bold">{error}</div>;
+
   if (error === "NOT_FOUND")
     return (
       <div className="flex flex-col items-center justify-center py-30 text-center px-4">
@@ -101,6 +98,13 @@ const AdDetail = () => {
   const isSkill = ad.type === "SKILL";
 
   const isAvailable = ad.status === "AVAILABLE";
+
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        return new Date(dateString).toLocaleDateString('fr-FR', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        });
+    };
 
   return (
     <div className="container mx-auto px-4 py-25 max-w-5xl">
@@ -205,7 +209,19 @@ const AdDetail = () => {
                 </p>
               </div>
 
-              <div className="flex items-center text-gray-700 font-medium mb-8 bg-gray-50 p-4 rounded-lg">
+                {ad.exchangeWith && (
+                    <div className="my-6 bg-cyan-50 border border-cyan-100 p-4 rounded-lg">
+                        <h3 className="text-sm font-bold text-cyan-900 uppercase mb-1 flex items-center">
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            Souhaité en échange
+                        </h3>
+                        <p className="text-gray-700 italic">
+                            "{ad.exchangeWith}"
+                        </p>
+                    </div>
+                )}
+
+              <div className="flex items-center text-gray-700 font-medium mb-2 bg-gray-50 p-4 rounded-lg">
                 <svg
                   className="w-6 h-6 mr-3 text-blue-500"
                   fill="none"
@@ -227,9 +243,14 @@ const AdDetail = () => {
                 </svg>
                 {ad.city || "Localisation non spécifiée"}
               </div>
+                <div className="text-xs text-gray-500 mb-2 flex items-center bg-gray-50 p-2 rounded">
+                    <svg className="w-4 h-4 mr-1 text-cyan-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Dispo : {formatDate(ad.availabilityStart)} - {formatDate(ad.availabilityEnd)}
+                </div>
             </div>
 
-            {/* SECTION CORRIGÉE POUR L'INTUITIVITÉ */}
             <div className="border-t pt-6">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
@@ -285,7 +306,6 @@ const AdDetail = () => {
                 )}
               </div>
             </div>
-            {/* FIN SECTION CORRIGÉE */}
           </div>
         </div>
       </div>

@@ -8,8 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {toast} from "sonner";
 import {useAdForm} from "@/hooks/useAdForm.jsx";
 
-const CreateAdModal = () => {
+const CreateAdModal = ({userLocation}) => {
     const [open, setOpen] = useState(false);
+    const minDate = new Date().toISOString().split("T")[0];
 
     const {
         input,
@@ -23,8 +24,11 @@ const CreateAdModal = () => {
     } = useAdForm({
         title: "",
         description: "",
-        city: "",
+        city: userLocation || "",
         type: "GOOD",
+        availabilityStart: minDate,
+        availabilityEnd: minDate,
+        exchangeWith: "",
         file: null
     });
 
@@ -36,6 +40,9 @@ const CreateAdModal = () => {
         formData.append("description", input.description);
         formData.append("city", input.city);
         formData.append("type", input.type);
+        formData.append("availabilityStart", input.availabilityStart);
+        formData.append("availabilityEnd", input.availabilityEnd);
+        formData.append("exchangeWith", input.exchangeWith);
         if (input.file && input.type === 'GOOD' && input.file instanceof File) {
             formData.append("file", input.file);
         }
@@ -137,6 +144,17 @@ const CreateAdModal = () => {
                         />
                     </div>
 
+                    <div className="flex flex-col gap-1">
+                        <Label htmlFor="exchangeWith">Ce que je souhaite en échange <span className="text-gray-400 font-normal">(Optionnel)</span></Label>
+                        <Input
+                            id="exchangeWith"
+                            name="exchangeWith"
+                            value={input.exchangeWith}
+                            onChange={changeEventHandler}
+                            placeholder="Ex: Un coup de main pour déménager, des légumes du jardin..."
+                        />
+                    </div>
+
                     <div className="flex flex-col gap-1 relative">
                         <Label htmlFor="city">Ville</Label>
                         <Input
@@ -153,8 +171,8 @@ const CreateAdModal = () => {
                             <ul className="absolute z-10 top-[70px] left-0 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                 {citySuggestions.map((city) => (
                                     <li
-                                        key={city.code} // Code INSEE unique
-                                        onClick={() => selectCity(city.nom, city.codesPostaux[0])}
+                                        key={city.code}
+                                        onClick={() => selectCity(city.nom)}
                                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm transition-colors"
                                     >
                                         {city.nom} <span className="text-gray-500">({city.codesPostaux[0]})</span>
@@ -162,6 +180,33 @@ const CreateAdModal = () => {
                                 ))}
                             </ul>
                         )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1">
+                            <Label htmlFor="availabilityStart">Disponible du</Label>
+                            <Input
+                                id="availabilityStart"
+                                name="availabilityStart"
+                                type="date"
+                                value={input.availabilityStart}
+                                onChange={changeEventHandler}
+                                className="cursor-pointer"
+                                min={minDate}
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                            <Label htmlFor="availabilityEnd">Au</Label>
+                            <Input
+                                id="availabilityEnd"
+                                name="availabilityEnd"
+                                type="date"
+                                value={input.availabilityEnd}
+                                onChange={changeEventHandler}
+                                className="cursor-pointer"
+                                min={minDate}
+                            />
+                        </div>
                     </div>
 
                     <DialogFooter className="mt-4">

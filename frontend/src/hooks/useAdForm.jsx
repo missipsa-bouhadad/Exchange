@@ -35,8 +35,8 @@ export const useAdForm = (initialState) => {
         }
     };
 
-    const selectCity = (cityName, zipCode) => {
-        setInput((prev) => ({ ...prev, city: `${cityName} (${zipCode})` }));
+    const selectCity = (cityName) => {
+        setInput((prev) => ({ ...prev, city: `${cityName}` }));
         setCitySuggestions([]);
     };
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import AdCard from '../components/ui/AdCard';
 import { Link } from 'react-router-dom';
 import {useSelector} from "react-redux";
+import CreateAdModal from "@/components/ui/CreateAdModal.jsx";
 
 const UserAnnouncements = () => {
     const [ads, setAds] = useState([]);
@@ -69,18 +70,7 @@ const UserAnnouncements = () => {
                 </div>
             )}
 
-            <Link
-                to="/create-ad"
-                className="fixed bottom-8 right-8 z-50 bg-cyan-950 hover:bg-cyan-800 text-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-                title="Créer une annonce"
-            >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap group-hover:ml-2 font-bold">
-                    Créer une annonce
-                </span>
-            </Link>
+            <CreateAdModal userLocation={user.location}/>
         </div>
     );
 };

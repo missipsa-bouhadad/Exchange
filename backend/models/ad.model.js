@@ -27,15 +27,23 @@ const adSchema=mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    availabilityStart: {
+        type: Date,
+        required: true
+    },
+    availabilityEnd: {
+        type: Date,
+        required: true
+    },
+    exchangeWith: {
+        type: String,
+        default: ""
+    },
     status: {
         type: String,
         enum: ["AVAILABLE", "EXCHANGED"],
         default: "AVAILABLE"
     },
-
-
-
-
 },{timestamps:true})
 
 
