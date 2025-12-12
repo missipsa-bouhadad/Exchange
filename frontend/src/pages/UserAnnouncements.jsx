@@ -3,6 +3,7 @@ import axios from 'axios';
 import AdCard from '../components/ui/AdCard';
 import { Link } from 'react-router-dom';
 import {useSelector} from "react-redux";
+import CreateAdModal from "@/components/ui/CreateAdModal.jsx";
 
 const UserAnnouncements = () => {
     const [ads, setAds] = useState([]);
@@ -12,6 +13,16 @@ const UserAnnouncements = () => {
 
     const removeAdFromList = (deletedAdId) => {
         setAds(ads.filter(ad => ad._id !== deletedAdId));
+    };
+
+    const addAdToList = (newAd) => {
+        setAds((prevAds) => [newAd, ...prevAds]);
+    };
+
+    const updateAdInList = (updatedAd) => {
+        setAds((prevAds) =>
+            prevAds.map((ad) => ad._id === updatedAd._id ? updatedAd : ad)
+        );
     };
 
     useEffect(() => {
@@ -33,7 +44,6 @@ const UserAnnouncements = () => {
         fetchAds();
     }, []);
 
-    // Affichage du chargement avec une animation Tailwind (pulse)
     if (loading) return (
         <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -64,23 +74,17 @@ const UserAnnouncements = () => {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {ads.map((ad) => (
-                        <AdCard key={ad._id} ad={ad} isUserAd={user._id === ad.user} onDeleteSuccess={removeAdFromList}/>
+                        <AdCard key={ad._id}
+                                ad={ad}
+                                isUserAd={user._id === ad.user}
+                                onDeleteSuccess={removeAdFromList}
+                                onUpdateSuccess={updateAdInList}
+                        />
                     ))}
                 </div>
             )}
 
-            <Link
-                to="/create-ad"
-                className="fixed bottom-8 right-8 z-50 bg-cyan-950 hover:bg-cyan-800 text-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-                title="Créer une annonce"
-            >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap group-hover:ml-2 font-bold">
-                    Créer une annonce
-                </span>
-            </Link>
+            <CreateAdModal userLocation={user.location} onCreateSuccess={addAdToList}/>
         </div>
     );
 };

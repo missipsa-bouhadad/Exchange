@@ -27,7 +27,6 @@ const Announcements = () => {
         fetchAds();
     }, []);
 
-    // Affichage du chargement avec une animation Tailwind (pulse)
     if (loading) return (
         <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -42,7 +41,6 @@ const Announcements = () => {
 
     return (
         <div className="container mx-auto px-4 py-25">
-            {/* Titre de la section */}
             <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
                     Annonces Récentes
@@ -57,7 +55,6 @@ const Announcements = () => {
                     Aucune annonce disponible pour le moment. Soyez le premier à poster !
                 </div>
             ) : (
-                /* Grille Responsive Tailwind */
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {ads.map((ad) => (
                         <AdCard key={ad._id} ad={ad} />
@@ -66,7 +63,7 @@ const Announcements = () => {
             )}
 
             {user && (
-                <CreateAdModal/>
+                <CreateAdModal userLocation={user.location}/>
             )}
         </div>
     );

@@ -167,10 +167,18 @@ const Demandes = () => {
           </div>
         ) : (
           <>
-            <div className="border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold">
-                {selectedChat.chatName}
-              </h2>
+            <div className="border-b pb-4 mb-4 space-y-1 text-center">
+              <h2 className="text-2xl font-semibold">Conversation</h2>
+
+              <div className="bg-gray-100 border rounded-xl p-4 shadow-sm text-left mx-auto max-w-2xl">
+                <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold">
+                  Description
+                </p>
+                <p className="text-gray-800 whitespace-pre-wrap mt-1">
+                  {selectedChat.adDescription ||
+                    "aucune description"}
+                </p>
+              </div>
             </div>
 
             <ScrollArea className="flex-1 overflow-auto p-2">

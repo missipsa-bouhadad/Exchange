@@ -17,8 +17,8 @@ import {
   GripVertical,
   FileText,
   Camera,
-  Loader2, // Pour le chargement
-  Edit, // Nouvelle icône pour l'édition
+  Loader2, 
+  Edit, 
 } from "lucide-react";
 import {
   Dialog,
@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"; // Ajout de Textarea pour Bio
+import { Textarea } from "@/components/ui/textarea";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/redux/authSlice";
 import { toast } from "sonner";
@@ -43,7 +43,7 @@ const Profile = () => {
   const { user } = useSelector((state) => state.auth);
 
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // État de chargement pour la soumission
+  const [isLoading, setIsLoading] = useState(false); 
   const [input, setInput] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -51,8 +51,18 @@ const Profile = () => {
     tel: user?.tel || "",
     bio: user?.bio || "",
     location: user?.location || "",
-    file: user?.photoUrl || "", // Initialisé avec l'URL ou vide
+    file: user?.photoUrl || "", 
   });
+  const [isLocating, setIsLocating] = useState(false);
+
+
+  // pour formater la date createdAt 
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const options = { year: "numeric", month: "long" };
+    return new Date(dateString).toLocaleDateString("fr-FR", options); // ex: "mars 2023"
+  };
+
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -66,15 +76,14 @@ const Profile = () => {
     if (e.target.files?.[0]) {
       setInput((prev) => ({
         ...prev,
-        file: e.target.files[0], // Le fichier lui-même
+        file: e.target.files[0],
       }));
     }
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Début du chargement
-
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("firstName", input.firstName);
     formData.append("lastName", input.lastName);
@@ -83,7 +92,6 @@ const Profile = () => {
     formData.append("bio", input.bio);
     formData.append("location", input.location);
 
-    // On n'envoie la photo que si c'est un vrai fichier (nouveau téléchargement)
     if (input.file && input.file instanceof File) {
       formData.append("file", input.file);
     }
@@ -103,36 +111,69 @@ const Profile = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         dispatch(setUser(res.data.user));
-        setOpen(false); // Fermer la modale après succès
+        setOpen(false); 
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Échec de la mise à jour.");
       console.log(error);
     } finally {
-      setIsLoading(false); // Fin du chargement
+      setIsLoading(false); 
     }
   };
 
-  // Fonction pour obtenir les initiales pour l'AvatarFallback
   const getInitials = () => {
     const first = user?.firstName?.[0] || "";
     const last = user?.lastName?.[0] || "";
     return `${first}${last}`.toUpperCase();
   };
 
+  // api pour detecter automatiquement la localisation
+  const detectLocation = () => {
+    if (!navigator.geolocation) {
+      return toast.error(
+        "La géolocalisation n'est pas supportée par votre navigateur."
+      );
+    }
+
+    setIsLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await axios.get(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=fr`
+          );
+          const detectedLocation =
+            res.data.city || res.data.locality || res.data.countryName;
+
+          setInput((prev) => ({ ...prev, location: detectedLocation }));
+        } catch (err) {
+          toast.error("Échec de la récupération de la localisation.");
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      () => {
+        toast.error("Veuillez autoriser l'accès à la géolocalisation.");
+        setIsLocating(false);
+      }
+    );
+  };
+
+
   return (
     <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center p-4">
       <div className="w-full max-w-4xl mx-auto">
-        {/* SECTION PRINCIPALE DU PROFIL */}
         <Card className="flex md:flex-row flex-col items-center gap-10 p-6 md:p-10 shadow-xl dark:bg-gray-800">
-          {/* Avatar et Infos de base */}
+          {/*les infos de base */}
           <div className="flex flex-col items-center md:items-start flex-shrink-0">
             <Avatar className="h-40 w-40 rounded-full border-4 border-cyan-500 dark:border-cyan-600 shadow-md">
               <AvatarImage
                 src={
                   input.file instanceof File
                     ? URL.createObjectURL(input.file)
-                    : input.file || "https://github.com/shadcn.png" // Placeholder si pas d'image
+                    : input.file || "https://github.com/shadcn.png"
                 }
                 alt={`${input.firstName} ${input.lastName}`}
                 className="object-cover h-full w-full rounded-full"
@@ -143,19 +184,17 @@ const Profile = () => {
             </Avatar>
           </div>
 
-          {/* Détails du Profil */}
+          {/*details*/}
           <div className="flex flex-col gap-3 w-full">
             <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
               {user?.firstName} {user?.lastName}
             </CardTitle>
 
-            {/* Affichage de la Bio (plus grande) */}
             <CardDescription className="text-gray-700 dark:text-gray-300 italic">
               "{user?.bio || "Pas de bio renseignée."}"
             </CardDescription>
 
             <div className="flex flex-col gap-3 mt-4 text-sm text-gray-700 dark:text-gray-300">
-              {/* Infos de contact */}
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-cyan-600 dark:text-cyan-500" />
                 <span>{user?.email}</span>
@@ -170,35 +209,31 @@ const Profile = () => {
               </div>
 
               <CardDescription className="pt-2 text-xs text-gray-500 dark:text-gray-400">
-                Membre depuis mars 2023 (à remplacer par la date réelle)
+                Membre depuis {formatDate(user?.createdAt)}
               </CardDescription>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex justify-end w-full">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button
-                    variant="default" // Utiliser la couleur primary
-                    className="w-fit"
-                  >
+                  <Button variant="default" className="w-fit">
                     <Edit className="mr-2 h-4 w-4" /> Modifier le profil
                   </Button>
                 </DialogTrigger>
 
-                {/* MODALE D'ÉDITION */}
                 <DialogContent className="sm:max-w-[550px] p-6">
                   <form onSubmit={submitHandler}>
                     <DialogHeader>
                       <DialogTitle className="text-2xl font-bold text-cyan-700 dark:text-cyan-400 text-center">
                         Modifier le profil
                       </DialogTitle>
+                      
                       <DialogDescription className="text-center">
                         Mettez à jour vos informations personnelles.
                       </DialogDescription>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-6">
-                      {/* Ligne 1: Prénom / Nom */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
                           <Label
@@ -233,7 +268,6 @@ const Profile = () => {
                         </div>
                       </div>
 
-                      {/* Ligne 2: Email */}
                       <div className="flex flex-col gap-1.5">
                         <Label
                           htmlFor="email"
@@ -250,15 +284,13 @@ const Profile = () => {
                         />
                       </div>
 
-                      {/* Ligne 3: Téléphone / Localisation */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
                           <Label
                             htmlFor="tel"
                             className="flex items-center gap-2"
                           >
-                            <Phone className="h-4 w-4 text-gray-500" />{" "}
-                            Téléphone
+                            <Phone className="h-4 w-4 text-gray-500" /> Tel
                           </Label>
                           <Input
                             id="tel"
@@ -277,18 +309,33 @@ const Profile = () => {
                             <MapPin className="h-4 w-4 text-gray-500" />{" "}
                             Localisation
                           </Label>
-                          <Input
-                            id="location"
-                            name="location"
-                            type="text"
-                            value={input.location}
-                            onChange={changeEventHandler}
-                            placeholder="Paris, France"
-                          />
+                          <div className="flex gap-2">
+                            <Input
+                              id="location"
+                              name="location"
+                              type="text"
+                              value={input.location}
+                              onChange={changeEventHandler}
+                              placeholder="Paris, France"
+                              className="flex-grow"
+                            />
+                            <Button
+                              type="button"
+                              onClick={detectLocation}
+                              disabled={isLocating}
+                              variant="secondary"
+                              className="flex-shrink-0"
+                            >
+                              {isLocating ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <MapPin className="mr-2 h-4 w-4" />
+                              )}
+                              {isLocating ? "Détection..." : "Auto"}
+                            </Button>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Ligne 4: Bio */}
                       <div className="flex flex-col gap-1.5">
                         <Label
                           htmlFor="bio"

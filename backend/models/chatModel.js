@@ -8,6 +8,7 @@ const chatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
+    adDescription: { type: String },
   },
   { timestamps: true }
 );

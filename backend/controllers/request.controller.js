@@ -57,8 +57,9 @@ export const acceptRequest = async (req, res) => {
     await request.save();
 
     const chat = await Chat.create({
-        chatName:request.ad.title,
-        users: [request.fromUser, request.toUser],
+      chatName: request.ad.title,
+      users: [request.fromUser, request.toUser],
+      adDescription: request.ad.description,
     });
 
     res.json({ success: true, chat });

@@ -1,13 +1,16 @@
 import { Ad } from '../models/ad.model.js'
 import cloudinary from '../utils/cloudinary.js'
 import getDataUri from '../utils/dataUri.js'
-import {User} from "../models/user.model.js";
 import mongoose from "mongoose";
 
 export const createAd=async(req,res)=>{
     try {
         const userId = new mongoose.Types.ObjectId(req.id);
-        const { title, description, type, city } = req.body;
+        const { title, description, type, city, availabilityStart, availabilityEnd, exchangeWith} = req.body;
+
+        if (new Date(availabilityStart) > new Date(availabilityEnd)) {
+            return res.status(400).json({ message: "La date de fin doit être après la date de début." });
+        }
         const file = req.file;
 
         if (!title || !description || !type || !city) {
@@ -29,6 +32,9 @@ export const createAd=async(req,res)=>{
                     city,
                     imageUrl: cloudResponse.secure_url,
                     user: userId,
+                    availabilityStart,
+                    availabilityEnd,
+                    exchangeWith
                 });
             }
         } else {
@@ -38,16 +44,70 @@ export const createAd=async(req,res)=>{
                 type,
                 city,
                 user: userId,
+                availabilityStart,
+                availabilityEnd,
+                exchangeWith
             });
         }
         res.status(201).json({
             success: true,
-            message: "Ad created successfully"
+            message: "Ad created successfully",
+            ad: await Ad.findOne({ title, description, user: userId})
         });
     } catch (error) {
         console.log(error);
     }
 }
+
+export const updateAd = async (req, res) => {
+    try {
+        const adId = req.params.id;
+        const userId = req.user.id;
+        const { title, description, city, type, availabilityStart, availabilityEnd, exchangeWith } = req.body;
+
+        const ad = await Ad.findById(adId);
+        if (!ad) {
+            return res.status(404).json({ success: false, message: "Annonce introuvable." });
+        }
+
+        if (ad.user.toString() !== userId) {
+            return res.status(403).json({ success: false, message: "Vous n'êtes pas autorisé à modifier cette annonce." });
+        }
+
+        let newImageUrl = ad.imageUrl;
+
+        if (req.file) {
+            await cloudinary.uploader.destroy(ad.imageUrl);
+            const cloudResponse = await cloudinary.uploader.upload(req.file.path);
+            newImageUrl = cloudResponse.secure_url;
+        }
+
+        if (type === 'SKILL') {
+            newImageUrl = "";
+        }
+
+        ad.title = title || ad.title;
+        ad.description = description || ad.description;
+        ad.city = city || ad.city;
+        ad.type = type || ad.type;
+        ad.availabilityStart = availabilityStart || ad.availabilityStart;
+        ad.availabilityEnd = availabilityEnd || ad.availabilityEnd;
+        ad.imageUrl = newImageUrl;
+        ad.exchangeWith = exchangeWith || ad.exchangeWith;
+
+        await ad.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Annonce mise à jour avec succès.",
+            ad
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Erreur serveur lors de la modification." });
+    }
+};
 
 export const getAllAds=async(req,res)=>{
     try {

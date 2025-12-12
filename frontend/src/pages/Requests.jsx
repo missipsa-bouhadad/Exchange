@@ -86,7 +86,6 @@ const Requests = () => {
       );
 
     } catch (err) {
-      console.error("Erreur rejet demande", err);
       alert("Une erreur est survenue lors du rejet.");
     }
   };
@@ -183,7 +182,7 @@ const Requests = () => {
 
               <div className="mb-6">
                 <p className="text-lg font-medium text-gray-700 mb-2">
-                  Message :
+                  Objet souhaité en retour :
                 </p>
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <p className="text-gray-600 italic leading-relaxed">
