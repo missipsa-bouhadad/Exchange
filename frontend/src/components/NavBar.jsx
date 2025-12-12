@@ -91,8 +91,15 @@ const NavBar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage
+                      src={user?.photoUrl || "https://via.placeholder.com/150"}
+                      alt={`${user?.firstName} ${user?.lastName}`}
+                    />
+
+                    <AvatarFallback>
+                      {user?.firstName?.[0]}
+                      {user?.lastName?.[0]}
+                    </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -121,7 +128,6 @@ const NavBar = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              
 
               {/*<Button
                 className="bg-white text-cyan-950 hover:bg-gray-100"

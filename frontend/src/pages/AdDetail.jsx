@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
 
 const AdDetail = () => {
   const { id } = useParams();
@@ -21,7 +22,6 @@ const AdDetail = () => {
           `http://localhost:8000/api/v1/ad/${id}`
         );
         setAd(response.data);
-        // Le console.log(ad) ici verra la valeur précédente, mais la mise à jour est en cours
         // console.log(ad)
         setLoading(false);
       } catch (err) {
@@ -35,7 +35,8 @@ const AdDetail = () => {
 
   const submitRequest = async () => {
     if (!ad?.user?._id || requestedObject.trim() === "") {
-      alert("Veuillez remplir le champ de votre demande.");
+      //alert("");
+      toast.error("Veuillez remplir le champ de votre demande.");
       return;
     }
 
@@ -47,13 +48,17 @@ const AdDetail = () => {
       );
 
       if (data.success) {
-        alert("Votre demande a été envoyée !");
-        setShowRequestInput(false); // Fermer après l'envoi
-        setRequestedObject(""); // Réinitialiser le champ
+        //alert("");
+        toast.success("Votre demande a été envoyée !");
+        setShowRequestInput(false); 
+        setRequestedObject(""); 
       }
     } catch (error) {
       console.error("Erreur envoi request:", error);
-      alert("Erreur lors de l'envoi de la demande. Veuillez réessayer.");
+      alert("");
+      toast.error(
+        "Erreur lors de l'envoi de la demande. Veuillez réessayer."
+      );
     }
   };
 

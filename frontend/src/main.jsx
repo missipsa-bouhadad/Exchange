@@ -20,7 +20,6 @@ createRoot(document.getElementById("root")).render(
           <App />
         </ThemeProvider>
       </ChatProvider>
-      <Toaster />
     </PersistGate>
   </Provider>
 );

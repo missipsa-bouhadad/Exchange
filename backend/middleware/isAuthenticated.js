@@ -20,11 +20,8 @@ export const isAuthenticated = async (req, res, next) => {
         success: false,
       });
     }
-
-    // On garde ce que tu avais
     req.id = decode.userId;
 
-    // 👉 On ajoute ceci pour ton système de requests
     const user = await User.findById(decode.userId).select("-password");
 
     if (!user) {
@@ -33,7 +30,7 @@ export const isAuthenticated = async (req, res, next) => {
         .json({ success: false, message: "User not found" });
     }
 
-    req.user = user; // 👈 ESSENTIEL
+    req.user = user;
 
     next();
   } catch (error) {

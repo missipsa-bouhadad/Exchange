@@ -15,8 +15,8 @@ import {
   EyeOff,
   Mail,
   Lock,
-  Loader2, // Pour l'état de chargement
-  Send, // Nouvelle icône pour le bouton de connexion
+  Loader2,
+  Send,
 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
@@ -66,13 +66,12 @@ const Login = () => {
       toast.error(error.response?.data?.message || "Échec de la connexion.");
       console.log(error);
     } finally {
-      setIsLoading(false); // Fin du chargement
+      setIsLoading(false); 
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 px-4">
-      {/* Taille max-w-sm pour rester compact comme l'original */}
       <Card className="w-full max-w-sm shadow-xl p-4 transition-all duration-300">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
