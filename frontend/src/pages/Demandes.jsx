@@ -138,10 +138,10 @@ const Demandes = () => {
         <ScrollArea className="h-[calc(100vh-120px)]">
           <div className="flex flex-col gap-3">
             {loadingChats ? (
-              <div className="text-center py-6">chargement...</div>
+              <div className="text-center py-6">loading...</div>
             ) : chats.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
-                aucune conversation
+                no conversation
               </div>
             ) : (
               chats.map((chat) => (
@@ -163,7 +163,7 @@ const Demandes = () => {
       <div className="flex-1 flex flex-col p-6">
         {!selectedChat ? (
           <div className="h-full flex items-center justify-center text-muted-foreground">
-            sélectionnez une conversation
+            select a conversation
           </div>
         ) : (
           <>
@@ -175,18 +175,17 @@ const Demandes = () => {
                   Description
                 </p>
                 <p className="text-gray-800 whitespace-pre-wrap mt-1">
-                  {selectedChat.adDescription ||
-                    "aucune description"}
+                  {selectedChat.adDescription || "aucune description"}
                 </p>
               </div>
             </div>
 
             <ScrollArea className="flex-1 overflow-auto p-2">
               {loadingMessages ? (
-                <div>chargement des messages...</div>
+                <div>loading messages...</div>
               ) : messages.length === 0 ? (
                 <div className="text-muted-foreground">
-                  commencez la conversation
+                  start the conversation
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">

@@ -1,5 +1,7 @@
 import Chat from "../models/chatModel.js";
 import Message from "../models/messageModel.js";
+import Notification from "../models/notification.model.js";
+import { Ad } from "../models/ad.model.js";
 
 export const sendMessage=async (req,res)=>{
     const { content, chatId, requestedObject } = req.body;
@@ -24,8 +26,8 @@ export const sendMessage=async (req,res)=>{
 
         //m a j latest message de la conversation
         await Chat.findByIdAndUpdate(chatId,{latestMessage:newMessage._id});
+        
         res.status(201).json({ success: true, data: newMessage });
-
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message:"erreur serveur" });

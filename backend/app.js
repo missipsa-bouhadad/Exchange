@@ -7,7 +7,8 @@ import userRoute from "./routes/user.route.js";
 import chatRoute from "./routes/chat.route.js";
 import adRoute from "./routes/ad.route.js";
 import requestRoute from "./routes/request.route.js";
-import messageRoute from "./routes/message.route.js"
+import messageRoute from "./routes/message.route.js";
+import notificationRoute from "./routes/notification.route.js";
 
 dotenv.config()
 const app=express()
@@ -25,5 +26,6 @@ app.use("/api/v1/chats", chatRoute);
 app.use('/api/v1/ad', adRoute)
 app.use("/api/v1/requests", requestRoute);
 app.use("/api/v1/messages", messageRoute);
+app.use("/api/v1/notifications", notificationRoute);
 
 export default app;

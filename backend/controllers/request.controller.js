@@ -1,6 +1,7 @@
 import Request from "../models/request.model.js";
 import { Ad } from "../models/ad.model.js";
 import Chat from "../models/chatModel.js";
+import Notification from "../models/notification.model.js";
 
 
 export const createRequest = async (req, res) => {
@@ -18,6 +19,14 @@ export const createRequest = async (req, res) => {
       fromUser: req.user._id,
       toUser: ad.user,
       message,
+    });
+
+    await Notification.create({
+      receiver: ad.user,
+      sender: req.user._id,
+      type: "REQUEST",
+      message: "Vous avez reçu une nouvelle demande pour votre annonce",
+      link: "/dashboard/requests",
     });
 
     res.json({ success: true, data: request });

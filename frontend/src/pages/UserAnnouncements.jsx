@@ -57,35 +57,39 @@ const UserAnnouncements = () => {
     );
 
     return (
-        <div className="container mx-auto px-4 py-25">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
-                    Vos Annonces
-                </h2>
-                <p className="mt-4 text-lg text-gray-500">
-                    Gérez et consultez toutes vos annonces publiées ici.
-                </p>
-            </div>
-
-            {!ads ? (
-                <div className="text-center text-gray-500 text-xl mt-10 bg-gray-50 p-10 rounded-xl">
-                    Vous n'avez pas encore publié d'annonces.
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {ads.map((ad) => (
-                        <AdCard key={ad._id}
-                                ad={ad}
-                                isUserAd={user._id === ad.user}
-                                onDeleteSuccess={removeAdFromList}
-                                onUpdateSuccess={updateAdInList}
-                        />
-                    ))}
-                </div>
-            )}
-
-            <CreateAdModal userLocation={user.location} onCreateSuccess={addAdToList}/>
+      <div className="container mx-auto px-4 py-25">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+            Your Ads
+          </h2>
+          <p className="mt-4 text-lg text-gray-500">
+            Manage and view all your published ads here.
+          </p>
         </div>
+
+        {!ads ? (
+          <div className="text-center text-gray-500 text-xl mt-10 bg-gray-50 p-10 rounded-xl">
+            You have not yet published any ads.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ads.map((ad) => (
+              <AdCard
+                key={ad._id}
+                ad={ad}
+                isUserAd={user._id === ad.user}
+                onDeleteSuccess={removeAdFromList}
+                onUpdateSuccess={updateAdInList}
+              />
+            ))}
+          </div>
+        )}
+
+        <CreateAdModal
+          userLocation={user.location}
+          onCreateSuccess={addAdToList}
+        />
+      </div>
     );
 };
 
