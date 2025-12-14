@@ -20,13 +20,14 @@ const createTestUser = async (name = "TestUser") => {
         city: "Paris"
     });
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY || "secret_test", { expiresIn: '1d' });
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
     return { user, token };
 };
 
 let mongoServer;
 
 beforeAll(async () => {
+    process.env.SECRET_KEY = "";
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
     await mongoose.connect(uri);
