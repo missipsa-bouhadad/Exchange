@@ -26,7 +26,7 @@ const createTestUser = async (name = "TestUser") => {
 beforeAll(async () => {
     const url = process.env.MONGO_URI_TEST || "mongodb://localhost:27017/test_db_ads";
     await mongoose.connect(url);
-});
+}, 20000);
 
 afterAll(async () => {
     await mongoose.connection.db.dropDatabase();
