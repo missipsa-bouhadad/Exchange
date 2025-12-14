@@ -148,11 +148,23 @@ const Demandes = () => {
                 <Card
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
-                  className={`p-4 cursor-pointer hover:bg-accent ${
-                    selectedChat?._id === chat._id ? "bg-accent" : ""
-                  }`}
+                  className={`px-3 py-2 cursor-pointer border-gray-400 shadow-none rounded-lg
+    hover:bg-gray-100 transition
+    ${selectedChat?._id === chat._id ? "bg-gray-100" : ""}
+  `}
                 >
-                  <p className="font-medium">{chat.chatName || chat._id}</p>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold truncate">
+                      {chat.chatName}
+                    </span>
+                    <span className="text-xs text-gray-500 truncate">
+                      {chat.latestMessage
+                        ? chat.latestMessage.sender?._id === currentUser._id
+                          ? `Vous : ${chat.latestMessage.content}`
+                          : chat.latestMessage.content
+                        : "Aucun message"}
+                    </span>
+                  </div>
                 </Card>
               ))
             )}
