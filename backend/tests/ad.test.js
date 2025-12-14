@@ -1,6 +1,7 @@
 // backend/tests/ad.test.js
 import request from 'supertest';
 import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import app from '../app.js';
@@ -23,14 +24,19 @@ const createTestUser = async (name = "TestUser") => {
     return { user, token };
 };
 
+let mongoServer;
+
 beforeAll(async () => {
-    const url = process.env.MONGO_URI_TEST || "mongodb://localhost:27017/test_db_ads";
-    await mongoose.connect(url);
-}, 20000);
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+    await mongoose.connect(uri);
+});
 
 afterAll(async () => {
-    await mongoose.connection.db.dropDatabase();
-    await mongoose.connection.close();
+    await mongoose.disconnect();
+    if (mongoServer) {
+        await mongoServer.stop();
+    }
 });
 
 afterEach(async () => {
