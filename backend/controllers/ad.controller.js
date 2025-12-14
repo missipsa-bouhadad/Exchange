@@ -111,7 +111,7 @@ export const updateAd = async (req, res) => {
 
 export const getAllAds=async(req,res)=>{
     try {
-        const ads=await Ad.find({});
+        const ads=await Ad.find({}).populate('user');
         return res.status(200).json({
             success:true,
             ads

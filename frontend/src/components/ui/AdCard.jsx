@@ -28,7 +28,7 @@ const AdCard = ({ ad, isUserAd, onDeleteSuccess, onUpdateSuccess}) => {
                     <img
                         src={ad.imageUrl}
                         alt={ad.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain p-2"
                     />
                 )}
 

@@ -159,7 +159,7 @@ const AdDetail = () => {
                   "https://via.placeholder.com/600x600?text=Pas+d'image"
                 }
                 alt={ad.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             )}
             <span
