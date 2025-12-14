@@ -7,7 +7,7 @@ export const isAuthenticated = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        message: "User not authenticated",
+        message: "not authenticated",
         success: false,
       });
     }
@@ -34,7 +34,7 @@ export const isAuthenticated = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("AUTH ERROR:", error);
+    //console.error("AUTH ERROR:", error);
     return res.status(401).json({
       message: "Authentication error",
       success: false,

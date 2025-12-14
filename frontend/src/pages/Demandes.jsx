@@ -138,21 +138,33 @@ const Demandes = () => {
         <ScrollArea className="h-[calc(100vh-120px)]">
           <div className="flex flex-col gap-3">
             {loadingChats ? (
-              <div className="text-center py-6">chargement...</div>
+              <div className="text-center py-6">loading...</div>
             ) : chats.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
-                aucune conversation
+                no conversation
               </div>
             ) : (
               chats.map((chat) => (
                 <Card
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
-                  className={`p-4 cursor-pointer hover:bg-accent ${
-                    selectedChat?._id === chat._id ? "bg-accent" : ""
-                  }`}
+                  className={`px-3 py-2 cursor-pointer border-gray-400 shadow-none rounded-lg
+    hover:bg-gray-100 transition
+    ${selectedChat?._id === chat._id ? "bg-gray-100" : ""}
+  `}
                 >
-                  <p className="font-medium">{chat.chatName || chat._id}</p>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold truncate">
+                      {chat.chatName}
+                    </span>
+                    <span className="text-xs text-gray-500 truncate">
+                      {chat.latestMessage
+                        ? chat.latestMessage.sender?._id === currentUser._id
+                          ? `Vous : ${chat.latestMessage.content}`
+                          : chat.latestMessage.content
+                        : "Aucun message"}
+                    </span>
+                  </div>
                 </Card>
               ))
             )}
@@ -163,7 +175,7 @@ const Demandes = () => {
       <div className="flex-1 flex flex-col p-6">
         {!selectedChat ? (
           <div className="h-full flex items-center justify-center text-muted-foreground">
-            sélectionnez une conversation
+            select a conversation
           </div>
         ) : (
           <>
@@ -175,18 +187,17 @@ const Demandes = () => {
                   Description
                 </p>
                 <p className="text-gray-800 whitespace-pre-wrap mt-1">
-                  {selectedChat.adDescription ||
-                    "aucune description"}
+                  {selectedChat.adDescription || "aucune description"}
                 </p>
               </div>
             </div>
 
             <ScrollArea className="flex-1 overflow-auto p-2">
               {loadingMessages ? (
-                <div>chargement des messages...</div>
+                <div>loading messages...</div>
               ) : messages.length === 0 ? (
                 <div className="text-muted-foreground">
-                  commencez la conversation
+                  start the conversation
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">

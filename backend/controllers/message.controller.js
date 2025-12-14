@@ -1,5 +1,7 @@
 import Chat from "../models/chatModel.js";
 import Message from "../models/messageModel.js";
+import Notification from "../models/notification.model.js";
+import { Ad } from "../models/ad.model.js";
 
 export const sendMessage=async (req,res)=>{
     const { content, chatId, requestedObject } = req.body;
@@ -22,10 +24,25 @@ export const sendMessage=async (req,res)=>{
         newMessage=await newMessage.populate("chat");
         newMessage=await Chat.populate(newMessage,{path:"chat.users",select:"firstName lastName email"});
 
+        const chat = await Chat.findById(chatId).populate("users");
+        const receiver = chat.users.find(
+          (user) => user._id.toString() !== req.user._id.toString()
+        );
+
+        if (receiver) {
+          await Notification.create({
+            receiver: receiver._id,
+            sender: req.user._id,
+            type: "MESSAGE",
+            message: `${req.user.firstName}-${req.user.lastName} vous a envoyé un nouveau message`,
+            link: `/dashboard/demandes`,
+          });
+        }
+
         //m a j latest message de la conversation
         await Chat.findByIdAndUpdate(chatId,{latestMessage:newMessage._id});
+        
         res.status(201).json({ success: true, data: newMessage });
-
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message:"erreur serveur" });
