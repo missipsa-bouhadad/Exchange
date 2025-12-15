@@ -3,7 +3,7 @@ import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, ArrowLeftRight } from "lucide-react";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Avatar } from "./ui/avatar";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +27,7 @@ const NavBar = () => {
   const [notifications, setNotifications] = useState([]);
   const [openNotif, setOpenNotif] = useState(false);
 
-  //fetch notifications
+  //charger les notifications
   useEffect(() => {
     if (!user) return;
 
@@ -89,32 +89,25 @@ const NavBar = () => {
   return (
     <div className="py-4 fixed w-full shadow bg-cyan-950 text-white z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
-        <div className="flex items-center gap-6">
-          <Link to="/">
-            <img src={logo} alt="Logo" className="w-10 h-10" />
+        <div className="flex items-center gap-3">
+          <Link to="/announcements" className="flex items-center gap-2 group">
+            <div className="p-2 rounded-xl bg-cyan-900 group-hover:bg-cyan-800 transition">
+              <ArrowLeftRight className="w-5 h-5 text-white" />
+            </div>
+            <span className="hidden sm:block font-semibold tracking-wide">
+              Echange
+            </span>
           </Link>
-
-          <div className="relative hidden md:flex items-center w-[320px]">
-            <Input type="text" placeholder="Search..." className="pr-10" />
-            <Button className="absolute right-0 bg-cyan-900" size="icon">
-              <Search className="w-4 h-4" />
-            </Button>
-          </div>
         </div>
 
         <div className="flex items-center gap-6">
           <nav>
             <ul className="flex items-center gap-6 font-medium">
-              <Link to="/">
-                <li className="hover:text-cyan-300 cursor-pointer">Home</li>
-              </Link>
               <Link to="/announcements">
-                <li className="hover:text-cyan-300 cursor-pointer">
-                  Announcements
-                </li>
+                <li className="hover:text-cyan-300 cursor-pointer">Annonces</li>
               </Link>
               <Link to="/about">
-                <li className="hover:text-cyan-300 cursor-pointer">About</li>
+                <li className="hover:text-cyan-300 cursor-pointer">A propos de nous</li>
               </Link>
             </ul>
           </nav>
@@ -135,25 +128,25 @@ const NavBar = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>Mon Compte</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard/profile">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/ads">Your announcements</Link>
+                    <Link to="/dashboard/ads">Mes annonces</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard/demandes">Messages</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/requests">Requests</Link>
+                    <Link to="/dashboard/requests">Demandes</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={logoutHandler}
                     className="text-red-600"
                   >
-                    Logout
+                    Se déconnecter
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -210,7 +203,7 @@ const NavBar = () => {
         transition-colors duration-200
       "
                 >
-                  Login
+                  Se connecter
                 </Button>
               </Link>
 
@@ -223,7 +216,7 @@ const NavBar = () => {
         transition-colors duration-200
       "
                 >
-                  Sign Up
+                  S'inscrire
                 </Button>
               </Link>
             </div>

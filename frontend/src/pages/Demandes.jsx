@@ -138,10 +138,10 @@ const Demandes = () => {
         <ScrollArea className="h-[calc(100vh-120px)]">
           <div className="flex flex-col gap-3">
             {loadingChats ? (
-              <div className="text-center py-6">loading...</div>
+              <div className="text-center py-6">chargement...</div>
             ) : chats.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
-                no conversation
+                aucune conversation
               </div>
             ) : (
               chats.map((chat) => (
@@ -175,7 +175,7 @@ const Demandes = () => {
       <div className="flex-1 flex flex-col p-6">
         {!selectedChat ? (
           <div className="h-full flex items-center justify-center text-muted-foreground">
-            select a conversation
+            selectionner une conversation
           </div>
         ) : (
           <>
@@ -183,7 +183,7 @@ const Demandes = () => {
               <h2 className="text-2xl font-semibold">Conversation</h2>
 
               <div className="bg-gray-100 border rounded-xl p-4 shadow-sm text-left mx-auto max-w-2xl">
-                <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold">
+                <p className="text-sm text-gray-500 tracking-wide font-semibold">
                   Description
                 </p>
                 <p className="text-gray-800 whitespace-pre-wrap mt-1">
@@ -194,10 +194,10 @@ const Demandes = () => {
 
             <ScrollArea className="flex-1 overflow-auto p-2">
               {loadingMessages ? (
-                <div>loading messages...</div>
+                <div>chargement des messages...</div>
               ) : messages.length === 0 ? (
                 <div className="text-muted-foreground">
-                  start the conversation
+                  commencer la conversation
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
@@ -222,8 +222,6 @@ const Demandes = () => {
                 </div>
               )}
             </ScrollArea>
-
-            {/* Input */}
             <div className="mt-4 flex gap-2">
               <Input
                 placeholder="Écrire un message..."

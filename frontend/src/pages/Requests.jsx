@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { fr } from "date-fns/locale";
+
 
 
 const Requests = () => {
@@ -14,12 +16,13 @@ const Requests = () => {
   const formatDate = (dateString) => {
     try {
       const date = parseISO(dateString);
-      return formatDistanceToNow(date, { addSuffix: true });
+      return formatDistanceToNow(date, { addSuffix: true, locale: fr });
     } catch (e) {
       console.error("Erreur de formatage de la date:", e);
       return "Date inconnue";
     }
   };
+
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -123,15 +126,13 @@ const Requests = () => {
   return (
     <div className="px-6 max-w-4xl mx-auto pt-20">
       <h1 className="text-4xl font-extrabold mb-8 text-gray-900 border-b pb-3">
-        Requests Received ({requests.length})
+        Demandes recues ({requests.length})
       </h1>
 
       {requests.length === 0 ? (
         <div className="text-center text-gray-500 mt-20 p-8 bg-white rounded-xl shadow-lg border border-gray-100">
-          <p className="text-xl font-medium">
-            You have no requests at the moment.
-          </p>
-          <p className="mt-2 text-md">Come back later !</p>
+          <p className="text-xl font-medium">Aucune demande pour le moment.</p>
+          <p className="mt-2 text-md">Revenez plus tard !</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -147,23 +148,20 @@ const Requests = () => {
               <div className="flex justify-between items-start mb-4 border-b pb-4">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-                    <span className="mr-2">👤</span>
                     {req.fromUser.firstName} {req.fromUser.lastName}
                     {req.status === "PENDING" && (
                       <span className="ml-3 text-sm font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
-                        NEW
+                        Nouvelle
                       </span>
                     )}
                   </h2>
                   <p className="text-sm text-gray-500 mt-1">
-                    Title :{" "}
+                    Titre :{" "}
                     <span className="font-semibold text-blue-700">
                       {req.ad.title}
                     </span>
                   </p>
                 </div>
-
-                {/* Statut et Date */}
                 <div className="text-right">
                   <span
                     className={`inline-block px-4 py-1 rounded-full text-sm font-bold border ${getStatusStyle(
@@ -174,7 +172,7 @@ const Requests = () => {
                   </span>
                   {req.createdAt && (
                     <p className="text-xs text-gray-400 mt-1">
-                      Received {formatDate(req.createdAt)}
+                      Recue il y a {formatDate(req.createdAt)}
                     </p>
                   )}
                 </div>
@@ -197,14 +195,14 @@ const Requests = () => {
                     onClick={() => acceptRequest(req._id)}
                     className="flex-1 flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
                   >
-                    Accept the request
+                    Accepter l'échange
                   </button>
 
                   <button
                     onClick={() => rejectRequest(req._id)}
                     className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
                   >
-                    Refuse the request
+                    Refuser l'échange
                   </button>
                 </div>
               )}
@@ -218,8 +216,8 @@ const Requests = () => {
                     }`}
                   >
                     {req.status === "ACCEPTED"
-                      ? "Request accepted"
-                      : "Request refused"}
+                      ? "Requette acceptée"
+                      : "Requette refusée"}
                   </p>
                 </div>
               )}

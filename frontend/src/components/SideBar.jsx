@@ -23,7 +23,7 @@ function SideBar() {
           }`
         }
       >
-        Your announcements
+        Mes annonces
       </NavLink>
 
       <NavLink
@@ -45,7 +45,7 @@ function SideBar() {
           }`
         }
       >
-        Requests
+        Demandes d'échange
       </NavLink>
 
       

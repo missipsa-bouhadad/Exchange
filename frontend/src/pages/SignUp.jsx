@@ -28,22 +28,22 @@ import { toast } from "sonner";
 const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Nouvel état pour la confirmation
-  const [isLoading, setIsLoading] = useState(false); // État de chargement pour la soumission
-  const [isLocating, setIsLocating] = useState(false); // État de chargement pour la localisation
-  const [passwordError, setPasswordError] = useState(""); // État d'erreur pour les mots de passe
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
+  const [isLocating, setIsLocating] = useState(false); 
+  const [passwordError, setPasswordError] = useState(""); 
 
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "", // Nouveau champ
+    confirmPassword: "", 
     bio: "",
     location: "",
   });
 
-  // --- Gestion de la détection de localisation ---
+  // api pour detecter la localisation
   const detectLocation = () => {
     if (!navigator.geolocation) {
       return toast.error(
@@ -51,7 +51,7 @@ const SignUp = () => {
       );
     }
 
-    setIsLocating(true); // Début du chargement de la localisation
+    setIsLocating(true); 
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -69,11 +69,10 @@ const SignUp = () => {
         } catch (err) {
           toast.error("Échec de la récupération de la localisation.");
         } finally {
-          setIsLocating(false); // Fin du chargement
+          setIsLocating(false);
         }
       },
       () => {
-        // En cas d'erreur ou de refus de permission
         toast.error("Veuillez autoriser l'accès à la géolocalisation.");
         setIsLocating(false);
       }
@@ -82,35 +81,27 @@ const SignUp = () => {
 
   const handleChange = (e) => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    // Réinitialiser l'erreur de mot de passe lors de la saisie
     if (e.target.name === "password" || e.target.name === "confirmPassword") {
       setPasswordError("");
     }
   };
 
-  // --- Validation côté client et soumission ---
+  //submit 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // 1. Validation de la confirmation du mot de passe
     if (user.password !== user.confirmPassword) {
       setPasswordError("Les mots de passe ne correspondent pas.");
       toast.error("Veuillez vérifier votre mot de passe.");
       return;
     }
-
-    // Vous pouvez ajouter ici d'autres validations (longueur, format email)
-
-    setIsLoading(true); // Début du chargement
-    setPasswordError(""); // Réinitialiser l'erreur si la validation locale est OK
+    setIsLoading(true);
+    setPasswordError(""); 
 
     try {
-      // Retirer le champ 'confirmPassword' avant d'envoyer au serveur
       const { confirmPassword, ...dataToSend } = user;
-
       const res = await axios.post(
         "http://localhost:8000/api/v1/user/register",
-        dataToSend, // Utiliser dataToSend sans confirmPassword
+        dataToSend,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -121,10 +112,9 @@ const SignUp = () => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      // Afficher l'erreur renvoyée par le serveur ou un message générique
       toast.error(error.response?.data?.message || "Échec de l'inscription.");
     } finally {
-      setIsLoading(false); // Fin du chargement
+      setIsLoading(false);
     }
   };
 
@@ -133,10 +123,10 @@ const SignUp = () => {
       <Card className="w-full max-w-lg shadow-xl p-6 transition-all duration-300">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
-            Create an account
+            Créer votre compte
           </CardTitle>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Join our community in just a few steps.
+            Rejoinez notre communauté en quelques étapes.
           </p>
         </CardHeader>
         <CardContent>
@@ -146,7 +136,7 @@ const SignUp = () => {
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="firstName" className="flex items-center gap-2">
                   <User className="h-4 w-4 text-gray-500" />
-                  First name
+                  Prénom
                 </Label>
                 <Input
                   name="firstName"
@@ -160,7 +150,7 @@ const SignUp = () => {
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="lastName" className="flex items-center gap-2">
                   <GripVertical className="h-4 w-4 text-gray-500" />
-                  Last name
+                  Nom
                 </Label>
                 <Input
                   name="lastName"
@@ -191,7 +181,7 @@ const SignUp = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="password" className="flex items-center gap-2">
-                  <Lock className="h-4 w-4 text-gray-500" /> Password
+                  <Lock className="h-4 w-4 text-gray-500" /> Mot de passe
                 </Label>
                 <div className="relative">
                   <Input
@@ -222,7 +212,7 @@ const SignUp = () => {
                   htmlFor="confirmPassword"
                   className="flex items-center gap-2"
                 >
-                  <Lock className="h-4 w-4 text-gray-500" /> Confirm password
+                  <Lock className="h-4 w-4 text-gray-500" /> Confirmer
                 </Label>
                 <div className="relative">
                   <Input
@@ -255,7 +245,7 @@ const SignUp = () => {
          
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="bio" className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-gray-500" /> Bio (optional)
+                <FileText className="h-4 w-4 text-gray-500" /> Bio (optionel)
               </Label>
               <Textarea
                 name="bio"
@@ -269,13 +259,13 @@ const SignUp = () => {
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="location" className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-500" /> Location
+                <MapPin className="h-4 w-4 text-gray-500" /> Localisation
               </Label>
               <div className="flex gap-2">
                 <Input
                   name="location"
                   id="location"
-                  placeholder="City (e.g., Paris)"
+                  placeholder="Ville (Paris)"
                   onChange={handleChange}
                   value={user.location}
                   required
@@ -306,7 +296,7 @@ const SignUp = () => {
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Sign up"
+                "Valider"
               )}
             </Button>
           </form>
@@ -318,7 +308,7 @@ const SignUp = () => {
               variant="link"
               className="text-sm w-full text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
             >
-              Do you already have an account? Log in
+              Cliquer ici si vous avez déja un compte
             </Button>
           </Link>
         </CardFooter>

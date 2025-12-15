@@ -60,10 +60,10 @@ const UserAnnouncements = () => {
       <div className="container mx-auto px-4 py-25">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
-            Your Ads
+            Vos annonces
           </h2>
           <p className="mt-4 text-lg text-gray-500">
-            Manage and view all your published ads here.
+            Gérer vos annonces publiées ici.
           </p>
         </div>
 

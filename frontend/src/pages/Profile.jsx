@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"; // Note: J'utilise le composant shadcn/ui Avatar si disponible, sinon Radix est correct.
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -60,7 +60,7 @@ const Profile = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const options = { year: "numeric", month: "long" };
-    return new Date(dateString).toLocaleDateString("fr-FR", options); // ex: "mars 2023"
+    return new Date(dateString).toLocaleDateString("fr-FR", options); // exp mars 2023
   };
 
 
@@ -102,7 +102,6 @@ const Profile = () => {
         formData,
         {
           headers: {
-            // Le Content-Type est automatiquement géré par le navigateur pour FormData
           },
           withCredentials: true,
         }
@@ -114,7 +113,7 @@ const Profile = () => {
         setOpen(false); 
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Échec de la mise à jour.");
+      toast.error(error.response?.data?.message || "echec de la mise à jour.");
       console.log(error);
     } finally {
       setIsLoading(false); 
@@ -149,7 +148,7 @@ const Profile = () => {
 
           setInput((prev) => ({ ...prev, location: detectedLocation }));
         } catch (err) {
-          toast.error("Échec de la récupération de la localisation.");
+          toast.error("echec de la récupération de la localisation.");
         } finally {
           setIsLocating(false);
         }
@@ -166,7 +165,6 @@ const Profile = () => {
     <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center p-4">
       <div className="w-full max-w-4xl mx-auto">
         <Card className="flex md:flex-row flex-col items-center gap-10 p-6 md:p-10 shadow-xl dark:bg-gray-800">
-          {/*les infos de base */}
           <div className="flex flex-col items-center md:items-start flex-shrink-0">
             <Avatar className="h-40 w-40 rounded-full border-4 border-cyan-500 dark:border-cyan-600 shadow-md">
               <AvatarImage
@@ -183,15 +181,13 @@ const Profile = () => {
               </AvatarFallback>
             </Avatar>
           </div>
-
-          {/*details*/}
           <div className="flex flex-col gap-3 w-full">
             <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
               {user?.firstName} {user?.lastName}
             </CardTitle>
 
             <CardDescription className="text-gray-700 dark:text-gray-300 italic">
-              "{user?.bio || "Pas de bio renseignée."}"
+              {user?.bio || "Pas de bio renseignée."}
             </CardDescription>
 
             <div className="flex flex-col gap-3 mt-4 text-sm text-gray-700 dark:text-gray-300">

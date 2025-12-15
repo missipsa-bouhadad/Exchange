@@ -1,6 +1,9 @@
 import React from 'react'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import Home from './pages/Home'
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Announcements from './pages/Announcements'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
@@ -18,12 +21,7 @@ import UserAnnouncements from "@/pages/UserAnnouncements.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <>
-        <NavBar />
-        <Home />
-      </>
-    ),
+    element: <Navigate to="/announcements" replace />,
   },
 
   {
@@ -116,7 +114,7 @@ const router = createBrowserRouter([
         path: "requests",
         element: (
           <>
-            <Requests/>
+            <Requests />
           </>
         ),
       },

@@ -197,7 +197,7 @@ const AdDetail = () => {
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     ></path>
                   </svg>
-                  Publié récemment
+                  Publiée récemment
                 </span>
               </div>
 
@@ -280,7 +280,7 @@ const AdDetail = () => {
                   </button>
                 </div>
                 {showRequestInput && (
-                  <div className="mt-4 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-md">
+                  <div className="mt-4 p-6  border  rounded-xl shadow-md">
                     <label className="block text-gray-700 font-semibold mb-2 text-lg">
                       Objet souhaité en retour :
                     </label>

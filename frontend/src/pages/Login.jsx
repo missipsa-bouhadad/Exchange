@@ -27,7 +27,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // <--- NOUVEL ÉTAT DE CHARGEMENT
+  const [isLoading, setIsLoading] = useState(false); 
 
   const [formData, setFormData] = useState({
     email: "",
@@ -44,7 +44,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Début du chargement
+    setIsLoading(true); 
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/user/login",
@@ -75,10 +75,10 @@ const Login = () => {
       <Card className="w-full max-w-sm shadow-xl p-4 transition-all duration-300">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
-            Sign in
+            Connexion
           </CardTitle>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Please enter your information !
+            Veuillez remplir vos informations
           </p>
         </CardHeader>
 
@@ -103,13 +103,13 @@ const Login = () => {
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-gray-500" /> Password
+                    <Lock className="h-4 w-4 text-gray-500" /> Mot de passe
                   </Label>
                   <a
                     href="#"
                     className="text-sm text-cyan-600 hover:underline underline-offset-4 dark:text-cyan-400"
                   >
-                    Forgot password ?
+                    Mot de passe oublié ?
                   </a>
                 </div>
                 <div className="relative">
@@ -146,7 +146,7 @@ const Login = () => {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  <Send className="mr-2 h-4 w-4" /> Login
+                  <Send className="mr-2 h-4 w-4" /> Se connecter
                 </>
               )}
             </Button>
@@ -159,7 +159,7 @@ const Login = () => {
               variant="link"
               className="text-sm w-full text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
             >
-              Don't have an account? Sign up
+              S'inscrire ici si vous n'avez pas de compte
             </Button>
           </Link>
         </CardFooter>
