@@ -282,7 +282,7 @@ const AdDetail = () => {
                 {showRequestInput && (
                   <div className="mt-4 p-6  border  rounded-xl shadow-md">
                     <label className="block text-gray-700 font-semibold mb-2 text-lg">
-                      Objet souhaité en retour :
+                      Objet proposé en retour :
                     </label>
 
                     <textarea

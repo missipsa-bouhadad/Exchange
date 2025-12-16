@@ -60,7 +60,8 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
                 toast.error("Échec de la création de l'annonce.");
             }
             setOpen(false);
-            setInput({ title: "", description: "", city: "", type: "GOOD", file: null });
+            setInput({ title: "", description: "", city: "", type: "GOOD", availabilityStart: minDate,
+                availabilityEnd: minDate, file: null });
         } catch (error) {
             console.error(error);
         }
