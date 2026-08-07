@@ -132,7 +132,7 @@ export const updateProfile = async (req, res) => {
     if (firstName) user.firstName = firstName;
     if (lastName) user.lastName = lastName;
     if (email) user.email = email;
-    if (password) user.password = password;
+    if (password) user.password = await bcrypt.hash(password, 10);
     if (tel) user.tel = tel;
     if (bio) user.bio = bio;
     if (location) user.location = location;
