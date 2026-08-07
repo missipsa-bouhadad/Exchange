@@ -77,7 +77,7 @@ const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-cyan-950 hover:bg-cyan-900 text-white text-sm px-4 py-2 h-auto">
+                <Button className="text-sm px-4 py-2 h-auto">
                     Modifier
                 </Button>
             </DialogTrigger>
@@ -123,7 +123,7 @@ const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
                                 className="cursor-pointer"
                             />
                             {input.file && (
-                                <p className="text-xs text-green-600 mt-1">
+                                <p className="text-xs text-mauve-clair mt-1">
                                     Fichier sélectionné : {input.file.name}
                                 </p>
                             )}
@@ -133,7 +133,7 @@ const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="description">Description détaillée</Label>
                         <textarea
-                            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex min-h-[80px] w-full rounded-md border border-mauve-clair bg-blanc px-3 py-2 text-sm shadow-sm placeholder:text-mauve-fonce/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mauve-clair disabled:cursor-not-allowed disabled:opacity-50 text-mauve-fonce"
                             id="description"
                             name="description"
                             value={input.description}
@@ -144,7 +144,7 @@ const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <Label htmlFor="exchangeWith">Ce que je souhaite en échange <span className="text-gray-400 font-normal">(Optionnel)</span></Label>
+                        <Label htmlFor="exchangeWith">Ce que je souhaite en échange <span className="text-mauve-fonce/60 font-normal">(Optionnel)</span></Label>
                         <Input
                             id="exchangeWith"
                             name="exchangeWith"
@@ -167,14 +167,14 @@ const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
                         />
 
                         {citySuggestions.length > 0 && (
-                            <ul className="absolute z-10 top-[70px] left-0 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                            <ul className="absolute z-10 top-[70px] left-0 w-full bg-blanc border border-mauve-clair rounded-md shadow-lg max-h-40 overflow-y-auto">
                                 {citySuggestions.map((city) => (
                                     <li
                                         key={city.code}
                                         onClick={() => selectCity(city.nom)}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm transition-colors"
+                                        className="px-4 py-2 hover:bg-mauve-clair cursor-pointer text-sm transition-colors"
                                     >
-                                        {city.nom} <span className="text-gray-500">({city.codesPostaux[0]})</span>
+                                        {city.nom} <span className="text-mauve-fonce/60">({city.codesPostaux[0]})</span>
                                     </li>
                                 ))}
                             </ul>
@@ -208,7 +208,7 @@ const UpdateAdModal = ({ ad, onUpdateSuccess }) => {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" className="bg-cyan-950">Sauvegarder</Button>
+                        <Button type="submit">Sauvegarder</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

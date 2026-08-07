@@ -124,13 +124,13 @@ const Demandes = () => {
 
   return (
     <div
-      className="relative flex bg-muted/20 overflow-hidden"
+      className="relative flex bg-mauve-clair/20 overflow-hidden"
       style={{
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
         marginTop: NAVBAR_HEIGHT,
       }}
     >
-      <div className="border-r bg-white p-4 w-80">
+      <div className="border-r border-mauve-clair bg-blanc p-4 w-80">
         <div className="flex items-center gap-2 mb-4">
           <h2 className="text-xl font-bold mx-auto">Conversations</h2>
         </div>
@@ -140,7 +140,7 @@ const Demandes = () => {
             {loadingChats ? (
               <div className="text-center py-6">chargement...</div>
             ) : chats.length === 0 ? (
-              <div className="text-center py-6 text-muted-foreground">
+              <div className="text-center py-6 text-mauve-fonce/70">
                 aucune conversation
               </div>
             ) : (
@@ -148,16 +148,16 @@ const Demandes = () => {
                 <Card
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
-                  className={`px-3 py-2 cursor-pointer border-gray-400 shadow-none rounded-lg
-    hover:bg-gray-100 transition
-    ${selectedChat?._id === chat._id ? "bg-gray-100" : ""}
+                  className={`px-3 py-2 cursor-pointer border-mauve-clair shadow-none rounded-lg
+    hover:bg-mauve-clair transition
+    ${selectedChat?._id === chat._id ? "bg-mauve-clair" : ""}
   `}
                 >
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold truncate">
                       {chat.chatName}
                     </span>
-                    <span className="text-xs text-gray-500 truncate">
+                    <span className="text-xs text-mauve-fonce/70 truncate">
                       {chat.latestMessage
                         ? chat.latestMessage.sender?._id === currentUser._id
                           ? `Vous : ${chat.latestMessage.content}`
@@ -174,19 +174,19 @@ const Demandes = () => {
 
       <div className="flex-1 flex flex-col p-6">
         {!selectedChat ? (
-          <div className="h-full flex items-center justify-center text-muted-foreground">
+          <div className="h-full flex items-center justify-center text-mauve-fonce/70">
             selectionner une conversation
           </div>
         ) : (
           <>
-            <div className="border-b pb-4 mb-4 space-y-1 text-center">
+            <div className="border-b border-mauve-clair pb-4 mb-4 space-y-1 text-center">
               <h2 className="text-2xl font-semibold">Conversation</h2>
 
-              <div className="bg-gray-100 border rounded-xl p-4 shadow-sm text-left mx-auto max-w-2xl">
-                <p className="text-sm text-gray-500 tracking-wide font-semibold">
+              <div className="bg-mauve-clair border border-mauve-clair rounded-xl p-4 shadow-sm text-left mx-auto max-w-2xl">
+                <p className="text-sm text-mauve-fonce/70 tracking-wide font-semibold">
                   Description
                 </p>
-                <p className="text-gray-800 whitespace-pre-wrap mt-1">
+                <p className="text-mauve-fonce whitespace-pre-wrap mt-1">
                   {selectedChat.adDescription || "aucune description"}
                 </p>
               </div>
@@ -196,7 +196,7 @@ const Demandes = () => {
               {loadingMessages ? (
                 <div>chargement des messages...</div>
               ) : messages.length === 0 ? (
-                <div className="text-muted-foreground">
+                <div className="text-mauve-fonce/70">
                   commencer la conversation
                 </div>
               ) : (
@@ -206,8 +206,10 @@ const Demandes = () => {
                     return (
                       <div
                         key={msg._id}
-                        className={`p-3 rounded-lg max-w-[70%] bg-gray-200 text-gray-900 ${
-                          isMine ? "self-end" : "self-start"
+                        className={`p-3 rounded-lg max-w-[70%] ${
+                          isMine
+                            ? "bg-mauve-fonce text-blanc self-end"
+                            : "bg-mauve-clair text-mauve-fonce self-start"
                         }`}
                       >
                         <div className="text-xs font-semibold mb-1">

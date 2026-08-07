@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ChatProvider>
-        <ThemeProvider>
+        <ThemeProvider defaultTheme="light" enableSystem={false} attribute="class">
           <App />
         </ThemeProvider>
       </ChatProvider>

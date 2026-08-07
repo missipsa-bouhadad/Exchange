@@ -43,7 +43,7 @@ const RemovalConfirmation = ({ad, onDeleteSuccess}) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-red-900 hover:bg-red-800 text-white text-sm px-4 py-2 h-auto">
+                <Button variant="destructive" className="text-sm px-4 py-2 h-auto">
                     Supprimer
                 </Button>
             </DialogTrigger>
@@ -56,8 +56,8 @@ const RemovalConfirmation = ({ad, onDeleteSuccess}) => {
                         <p className="mb-4">Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.</p>
                     </div>
                     <DialogFooter>
-                        <Button onClick={cancelRemoval} className="bg-red-900 hover:bg-red-800 text-white text-sm px-4 py-2 h-auto">Annuler</Button>
-                        <Button onClick={handleRemoval} className="bg-cyan-950 hover:bg-cyan-800 text-white text-sm px-4 py-2 h-auto">Confirmer</Button>
+                        <Button variant="outline" onClick={cancelRemoval} className="text-sm px-4 py-2 h-auto">Annuler</Button>
+                        <Button variant="destructive" onClick={handleRemoval} className="text-sm px-4 py-2 h-auto">Confirmer</Button>
                     </DialogFooter>
             </DialogContent>
         </Dialog>

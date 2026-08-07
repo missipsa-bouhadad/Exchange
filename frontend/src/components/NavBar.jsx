@@ -87,12 +87,12 @@ const NavBar = () => {
   };
 
   return (
-    <div className="py-4 fixed w-full shadow bg-cyan-950 text-white z-50">
+    <div className="py-4 fixed w-full shadow bg-mauve-fonce text-blanc z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
         <div className="flex items-center gap-3">
           <Link to="/announcements" className="flex items-center gap-2 group">
-            <div className="p-2 rounded-xl bg-cyan-900 group-hover:bg-cyan-800 transition">
-              <ArrowLeftRight className="w-5 h-5 text-white" />
+            <div className="p-2 rounded-xl bg-blanc/20 group-hover:bg-blanc/30 transition">
+              <ArrowLeftRight className="w-5 h-5 text-blanc" />
             </div>
             <span className="hidden sm:block font-semibold tracking-wide">
               Echange
@@ -104,10 +104,10 @@ const NavBar = () => {
           <nav>
             <ul className="flex items-center gap-6 font-medium">
               <Link to="/announcements">
-                <li className="hover:text-cyan-300 cursor-pointer">Annonces</li>
+                <li className="hover:text-blanc/70 cursor-pointer">Annonces</li>
               </Link>
               <Link to="/about">
-                <li className="hover:text-cyan-300 cursor-pointer">A propos de nous</li>
+                <li className="hover:text-blanc/70 cursor-pointer">A propos de nous</li>
               </Link>
             </ul>
           </nav>
@@ -144,7 +144,7 @@ const NavBar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={logoutHandler}
-                    className="text-red-600"
+                    className="text-mauve-fonce focus:text-mauve-fonce"
                   >
                     Se déconnecter
                   </DropdownMenuItem>
@@ -153,22 +153,22 @@ const NavBar = () => {
 
               <div className="relative">
                 <Bell
-                  className="w-6 h-6 cursor-pointer hover:text-cyan-300"
+                  className="w-6 h-6 cursor-pointer hover:text-blanc/70"
                   onClick={() => setOpenNotif(!openNotif)}
                 />
 
                 {unreadCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-mauve-clair text-mauve-fonce text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {unreadCount}
                   </span>
                 )}
 
                 {openNotif && (
-                  <div className="absolute right-0 mt-3 w-80 bg-white text-black rounded-xl shadow-xl z-50">
-                    <div className="p-3 font-bold border-b">Notifications</div>
+                  <div className="absolute right-0 mt-3 w-80 bg-blanc text-mauve-fonce rounded-xl shadow-xl z-50 border border-mauve-clair">
+                    <div className="p-3 font-bold border-b border-mauve-clair">Notifications</div>
 
                     {notifications.length === 0 ? (
-                      <p className="p-4 text-sm text-gray-500">
+                      <p className="p-4 text-sm text-mauve-fonce/70">
                         Aucune notification
                       </p>
                     ) : (
@@ -176,12 +176,12 @@ const NavBar = () => {
                         <div
                           key={notif._id}
                           onClick={() => handleNotificationClick(notif)}
-                          className={`p-3 text-sm cursor-pointer hover:bg-gray-100 ${
-                            !notif.isRead ? "bg-blue-50 font-semibold" : ""
+                          className={`p-3 text-sm cursor-pointer hover:bg-mauve-clair ${
+                            !notif.isRead ? "bg-mauve-clair font-semibold" : ""
                           }`}
                         >
                           <p>{notif.message}</p>
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-mauve-fonce/70">
                             {new Date(notif.createdAt).toLocaleString()}
                           </span>
                         </div>
@@ -196,10 +196,9 @@ const NavBar = () => {
               <Link to="/login">
                 <Button
                   className="
-        bg-white
-        text-cyan-950
-        hover:bg-white
-        hover:text-cyan-950
+        bg-blanc
+        text-mauve-fonce
+        hover:bg-blanc/90
         transition-colors duration-200
       "
                 >
@@ -210,10 +209,11 @@ const NavBar = () => {
               <Link to="/signup">
                 <Button
                   className="
-        bg-cyan-800
-        text-white
-        hover:bg-cyan-700
+        bg-blanc/20
+        text-blanc
+        hover:bg-blanc/30
         transition-colors duration-200
+        border border-blanc/30
       "
                 >
                   S'inscrire

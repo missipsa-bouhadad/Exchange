@@ -23,9 +23,9 @@ const CustomToaster = (props) => {
         loading: <Loader2Icon className="size-4 animate-spin" />,
       }}
       style={{
-        "--normal-bg": "var(--popover)",
-        "--normal-text": "var(--popover-foreground)",
-        "--normal-border": "var(--border)",
+        "--normal-bg": "var(--color-blanc)",
+        "--normal-text": "var(--color-mauve-fonce)",
+        "--normal-border": "var(--color-mauve-clair)",
         "--border-radius": "var(--radius)",
       }}
       {...props}

@@ -71,7 +71,7 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <button
-                    className="fixed bottom-8 right-8 z-50 bg-cyan-950 hover:bg-cyan-800 text-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
+                    className="fixed bottom-8 right-8 z-50 bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
                     title="Créer une annonce"
                 >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
                                 className="cursor-pointer"
                             />
                             {input.file && (
-                                <p className="text-xs text-green-600 mt-1">
+                                <p className="text-xs text-mauve-clair mt-1">
                                     Fichier sélectionné : {input.file.name}
                                 </p>
                             )}
@@ -135,7 +135,7 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="description">Description détaillée</Label>
                         <textarea
-                            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex min-h-[80px] w-full rounded-md border border-mauve-clair bg-blanc px-3 py-2 text-sm shadow-sm placeholder:text-mauve-fonce/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mauve-clair disabled:cursor-not-allowed disabled:opacity-50 text-mauve-fonce"
                             id="description"
                             name="description"
                             value={input.description}
@@ -146,7 +146,7 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <Label htmlFor="exchangeWith">Ce que je souhaite en échange <span className="text-gray-400 font-normal">(Optionnel)</span></Label>
+                        <Label htmlFor="exchangeWith">Ce que je souhaite en échange <span className="text-mauve-fonce/60 font-normal">(Optionnel)</span></Label>
                         <Input
                             id="exchangeWith"
                             name="exchangeWith"
@@ -169,14 +169,14 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
                         />
 
                         {citySuggestions.length > 0 && (
-                            <ul className="absolute z-10 top-[70px] left-0 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                            <ul className="absolute z-10 top-[70px] left-0 w-full bg-blanc border border-mauve-clair rounded-md shadow-lg max-h-40 overflow-y-auto">
                                 {citySuggestions.map((city) => (
                                     <li
                                         key={city.code}
                                         onClick={() => selectCity(city.nom)}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm transition-colors"
+                                        className="px-4 py-2 hover:bg-mauve-clair cursor-pointer text-sm transition-colors"
                                     >
-                                        {city.nom} <span className="text-gray-500">({city.codesPostaux[0]})</span>
+                                        {city.nom} <span className="text-mauve-fonce/60">({city.codesPostaux[0]})</span>
                                     </li>
                                 ))}
                             </ul>
@@ -211,7 +211,7 @@ const CreateAdModal = ({userLocation, onCreateSuccess}) => {
                     </div>
 
                     <DialogFooter className="mt-4">
-                        <Button type="submit" className="bg-cyan-950 hover:bg-cyan-800 w-full sm:w-auto">
+                        <Button type="submit" className="w-full sm:w-auto">
                             Publier l'annonce
                         </Button>
                     </DialogFooter>

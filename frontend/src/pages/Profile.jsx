@@ -162,11 +162,11 @@ const Profile = () => {
 
 
   return (
-    <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center p-4">
+    <div className="pt-20 min-h-screen bg-blanc flex justify-center p-4">
       <div className="w-full max-w-4xl mx-auto">
-        <Card className="flex md:flex-row flex-col items-center gap-10 p-6 md:p-10 shadow-xl dark:bg-gray-800">
+        <Card className="flex md:flex-row flex-col items-center gap-10 p-6 md:p-10 shadow-xl border-t-4 border-t-mauve-fonce">
           <div className="flex flex-col items-center md:items-start flex-shrink-0">
-            <Avatar className="h-40 w-40 rounded-full border-4 border-cyan-500 dark:border-cyan-600 shadow-md">
+            <Avatar className="h-40 w-40 rounded-full border-4 border-mauve-fonce shadow-md">
               <AvatarImage
                 src={
                   input.file instanceof File
@@ -176,35 +176,35 @@ const Profile = () => {
                 alt={`${input.firstName} ${input.lastName}`}
                 className="object-cover h-full w-full rounded-full"
               />
-              <AvatarFallback className="flex items-center justify-center h-full w-full bg-cyan-100 text-3xl font-semibold text-cyan-700">
+              <AvatarFallback className="flex items-center justify-center h-full w-full bg-mauve-clair text-3xl font-semibold text-mauve-fonce">
                 {getInitials()}
               </AvatarFallback>
             </Avatar>
           </div>
           <div className="flex flex-col gap-3 w-full">
-            <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
+            <CardTitle className="text-3xl font-bold text-mauve-fonce">
               {user?.firstName} {user?.lastName}
             </CardTitle>
 
-            <CardDescription className="text-gray-700 dark:text-gray-300 italic">
+            <CardDescription className="text-mauve-fonce/70 italic">
               {user?.bio || "Pas de bio renseignée."}
             </CardDescription>
 
-            <div className="flex flex-col gap-3 mt-4 text-sm text-gray-700 dark:text-gray-300">
+            <div className="flex flex-col gap-3 mt-4 text-sm text-mauve-fonce">
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-cyan-600 dark:text-cyan-500" />
+                <Mail className="w-4 h-4 text-mauve-fonce" />
                 <span>{user?.email}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-cyan-600 dark:text-cyan-500" />
+                <Phone className="w-4 h-4 text-mauve-fonce" />
                 <span>{user?.tel || "Non renseigné"}</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-cyan-600 dark:text-cyan-500" />
+                <MapPin className="w-4 h-4 text-mauve-fonce" />
                 <span>{user?.location || "Non renseignée"}</span>
               </div>
 
-              <CardDescription className="pt-2 text-xs text-gray-500 dark:text-gray-400">
+              <CardDescription className="pt-2 text-xs text-mauve-fonce/70">
                 Membre depuis {formatDate(user?.createdAt)}
               </CardDescription>
             </div>
@@ -220,7 +220,7 @@ const Profile = () => {
                 <DialogContent className="sm:max-w-[550px] p-6">
                   <form onSubmit={submitHandler}>
                     <DialogHeader>
-                      <DialogTitle className="text-2xl font-bold text-cyan-700 dark:text-cyan-400 text-center">
+                      <DialogTitle className="text-2xl font-bold text-mauve-fonce text-center">
                         Modifier le profil
                       </DialogTitle>
                       
@@ -236,7 +236,7 @@ const Profile = () => {
                             htmlFor="firstName"
                             className="flex items-center gap-2"
                           >
-                            <User className="h-4 w-4 text-gray-500" /> Prénom
+                            <User className="h-4 w-4 text-mauve-fonce/70" /> Prénom
                           </Label>
                           <Input
                             id="firstName"
@@ -251,7 +251,7 @@ const Profile = () => {
                             htmlFor="lastName"
                             className="flex items-center gap-2"
                           >
-                            <GripVertical className="h-4 w-4 text-gray-500" />{" "}
+                            <GripVertical className="h-4 w-4 text-mauve-fonce/70" />{" "}
                             Nom
                           </Label>
                           <Input
@@ -269,7 +269,7 @@ const Profile = () => {
                           htmlFor="email"
                           className="flex items-center gap-2"
                         >
-                          <Mail className="h-4 w-4 text-gray-500" /> Email
+                          <Mail className="h-4 w-4 text-mauve-fonce/70" /> Email
                         </Label>
                         <Input
                           id="email"
@@ -286,7 +286,7 @@ const Profile = () => {
                             htmlFor="tel"
                             className="flex items-center gap-2"
                           >
-                            <Phone className="h-4 w-4 text-gray-500" /> Tel
+                            <Phone className="h-4 w-4 text-mauve-fonce/70" /> Tel
                           </Label>
                           <Input
                             id="tel"
@@ -302,7 +302,7 @@ const Profile = () => {
                             htmlFor="location"
                             className="flex items-center gap-2"
                           >
-                            <MapPin className="h-4 w-4 text-gray-500" />{" "}
+                            <MapPin className="h-4 w-4 text-mauve-fonce/70" />{" "}
                             Localisation
                           </Label>
                           <div className="flex gap-2">
@@ -337,7 +337,7 @@ const Profile = () => {
                           htmlFor="bio"
                           className="flex items-center gap-2"
                         >
-                          <FileText className="h-4 w-4 text-gray-500" /> Bio
+                          <FileText className="h-4 w-4 text-mauve-fonce/70" /> Bio
                         </Label>
                         <Textarea
                           id="bio"
@@ -355,7 +355,7 @@ const Profile = () => {
                           htmlFor="file"
                           className="flex items-center gap-2"
                         >
-                          <Camera className="h-4 w-4 text-gray-500" /> Photo de
+                          <Camera className="h-4 w-4 text-mauve-fonce/70" /> Photo de
                           profil
                         </Label>
                         <Input
@@ -391,26 +391,26 @@ const Profile = () => {
 
         {/* SECTION STATISTIQUES */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-          <Card className="dark:bg-gray-800 shadow-md border-t-4 border-t-cyan-500">
+          <Card className="shadow-md border-t-4 border-t-mauve-fonce">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-cyan-600">12</p>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-4xl font-extrabold text-mauve-fonce">12</p>
+              <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
                 Annonces actives
               </p>
             </CardContent>
           </Card>
-          <Card className="dark:bg-gray-800 shadow-md border-t-4 border-t-green-500">
+          <Card className="shadow-md border-t-4 border-t-mauve-fonce">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-green-600">34</p>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-4xl font-extrabold text-mauve-fonce">34</p>
+              <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
                 Annonces publiées
               </p>
             </CardContent>
           </Card>
-          <Card className="dark:bg-gray-800 shadow-md border-t-4 border-t-yellow-500">
+          <Card className="shadow-md border-t-4 border-t-mauve-fonce">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-yellow-600">4.8 ★</p>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-4xl font-extrabold text-mauve-fonce">4.8 ★</p>
+              <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
                 Note moyenne
               </p>
             </CardContent>

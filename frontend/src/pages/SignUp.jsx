@@ -119,13 +119,13 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 px-4">
-      <Card className="w-full max-w-lg shadow-xl p-6 transition-all duration-300">
+    <div className="flex justify-center items-center min-h-screen bg-blanc pt-24 px-4">
+      <Card className="w-full max-w-lg shadow-xl p-6 transition-all duration-300 border-t-4 border-t-mauve-fonce">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
+          <CardTitle className="text-3xl font-bold text-mauve-fonce">
             Créer votre compte
           </CardTitle>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-mauve-fonce/70">
             Rejoinez notre communauté en quelques étapes.
           </p>
         </CardHeader>
@@ -135,7 +135,7 @@ const SignUp = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="firstName" className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-gray-500" />
+                  <User className="h-4 w-4 text-mauve-fonce/70" />
                   Prénom
                 </Label>
                 <Input
@@ -149,7 +149,7 @@ const SignUp = () => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="lastName" className="flex items-center gap-2">
-                  <GripVertical className="h-4 w-4 text-gray-500" />
+                  <GripVertical className="h-4 w-4 text-mauve-fonce/70" />
                   Nom
                 </Label>
                 <Input
@@ -165,7 +165,7 @@ const SignUp = () => {
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gray-500" /> Email
+                <Mail className="h-4 w-4 text-mauve-fonce/70" /> Email
               </Label>
               <Input
                 name="email"
@@ -181,7 +181,7 @@ const SignUp = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="password" className="flex items-center gap-2">
-                  <Lock className="h-4 w-4 text-gray-500" /> Mot de passe
+                  <Lock className="h-4 w-4 text-mauve-fonce/70" /> Mot de passe
                 </Label>
                 <div className="relative">
                   <Input
@@ -191,12 +191,12 @@ const SignUp = () => {
                     onChange={handleChange}
                     value={user.password}
                     required
-                    className={`pr-10 ${passwordError ? "border-red-500" : ""}`}
+                    className={`pr-10 ${passwordError ? "border-mauve-fonce" : ""}`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-400"
+                    className="absolute right-3 top-2.5 text-mauve-fonce/70 hover:text-mauve-fonce"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -212,7 +212,7 @@ const SignUp = () => {
                   htmlFor="confirmPassword"
                   className="flex items-center gap-2"
                 >
-                  <Lock className="h-4 w-4 text-gray-500" /> Confirmer
+                  <Lock className="h-4 w-4 text-mauve-fonce/70" /> Confirmer
                 </Label>
                 <div className="relative">
                   <Input
@@ -222,12 +222,12 @@ const SignUp = () => {
                     onChange={handleChange}
                     value={user.confirmPassword}
                     required
-                    className={`pr-10 ${passwordError ? "border-red-500" : ""}`}
+                    className={`pr-10 ${passwordError ? "border-mauve-fonce" : ""}`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-400"
+                    className="absolute right-3 top-2.5 text-mauve-fonce/70 hover:text-mauve-fonce"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -237,7 +237,7 @@ const SignUp = () => {
                   </button>
                 </div>
                 {passwordError && (
-                  <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+                  <p className="text-mauve-fonce text-xs mt-1 font-semibold">{passwordError}</p>
                 )}
               </div>
             </div>
@@ -245,7 +245,7 @@ const SignUp = () => {
          
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="bio" className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-gray-500" /> Bio (optionel)
+                <FileText className="h-4 w-4 text-mauve-fonce/70" /> Bio (optionel)
               </Label>
               <Textarea
                 name="bio"
@@ -259,7 +259,7 @@ const SignUp = () => {
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="location" className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-500" /> Localisation
+                <MapPin className="h-4 w-4 text-mauve-fonce/70" /> Localisation
               </Label>
               <div className="flex gap-2">
                 <Input
@@ -306,7 +306,7 @@ const SignUp = () => {
           <Link to="/login" className="w-full text-center">
             <Button
               variant="link"
-              className="text-sm w-full text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
+              className="text-sm w-full text-mauve-fonce hover:text-mauve-fonce/80"
             >
               Cliquer ici si vous avez déja un compte
             </Button>

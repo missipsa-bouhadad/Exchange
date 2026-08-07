@@ -71,13 +71,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 px-4">
-      <Card className="w-full max-w-sm shadow-xl p-4 transition-all duration-300">
+    <div className="flex justify-center items-center min-h-screen bg-blanc pt-24 px-4">
+      <Card className="w-full max-w-sm shadow-xl p-4 transition-all duration-300 border-t-4 border-t-mauve-fonce">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-3xl font-bold text-cyan-700 dark:text-cyan-400">
+          <CardTitle className="text-3xl font-bold text-mauve-fonce">
             Connexion
           </CardTitle>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-mauve-fonce/70">
             Veuillez remplir vos informations
           </p>
         </CardHeader>
@@ -87,7 +87,7 @@ const Login = () => {
             <div className="flex flex-col gap-2">
               <div className="grid gap-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-gray-500" /> Email
+                  <Mail className="h-4 w-4 text-mauve-fonce/70" /> Email
                 </Label>
                 <Input
                   name="email"
@@ -103,11 +103,11 @@ const Login = () => {
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-gray-500" /> Mot de passe
+                    <Lock className="h-4 w-4 text-mauve-fonce/70" /> Mot de passe
                   </Label>
                   <a
                     href="#"
-                    className="text-sm text-cyan-600 hover:underline underline-offset-4 dark:text-cyan-400"
+                    className="text-sm text-mauve-fonce hover:underline underline-offset-4"
                   >
                     Mot de passe oublié ?
                   </a>
@@ -125,7 +125,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-400"
+                    className="absolute right-3 top-2.5 text-mauve-fonce/70 hover:text-mauve-fonce"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -157,7 +157,7 @@ const Login = () => {
           <Link to="/signup" className="w-full text-center">
             <Button
               variant="link"
-              className="text-sm w-full text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
+              className="text-sm w-full text-mauve-fonce hover:text-mauve-fonce/80"
             >
               S'inscrire ici si vous n'avez pas de compte
             </Button>
