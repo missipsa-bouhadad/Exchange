@@ -43,7 +43,7 @@ export const createRequest = async (req, res) => {
 
 export const getReceivedRequests = async (req, res) => {
   try {
-    //console.log("req.user =", req.user); 
+    //console.log("req.user =", req.user);
 
     const requests = await Request.find({ toUser: req.user._id })
       .populate("fromUser", "firstName lastName email")
@@ -53,6 +53,20 @@ export const getReceivedRequests = async (req, res) => {
   } catch (error) {
     console.error("Erreur getReceivedRequests :", error);
     res.status(500).json({ success: false, error: "Erreur serveur" });
+  }
+};
+
+
+export const getSentRequests = async (req, res) => {
+  try {
+    const requests = await Request.find({ fromUser: req.user._id })
+      .populate("toUser", "firstName lastName email")
+      .populate("ad", "title");
+
+    res.json({ success: true, data: requests });
+  } catch (error) {
+    console.error("Erreur getSentRequests :", error);
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };
 

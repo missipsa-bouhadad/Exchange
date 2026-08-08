@@ -15,6 +15,7 @@ import Profile from './pages/Profile'
 import Posts from './pages/Posts'
 import Demandes from './pages/Demandes'
 import Requests from "./pages/Requests";
+import SentRequests from "./pages/SentRequests";
 import AdDetail from "@/pages/AdDetail.jsx";
 import UserAnnouncements from "@/pages/UserAnnouncements.jsx";
 import ForgotPassword from "@/pages/ForgotPassword.jsx";
@@ -135,6 +136,14 @@ const router = createBrowserRouter([
         element: (
           <>
             <Requests />
+          </>
+        ),
+      },
+      {
+        path: "sent-requests",
+        element: (
+          <>
+            <SentRequests />
           </>
         ),
       },
