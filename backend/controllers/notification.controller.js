@@ -1,43 +1,4 @@
 import Notification from "../models/notification.model.js";
-import {Ad} from "../models/ad.model.js";
-import Request from "../models/request.model.js";
-
-export const createRequest = async (req, res) => {
-  try {
-    const { adId, message } = req.body;
-
-    const ad = await Ad.findById(adId).populate("user");
-    if (!ad) {
-      return res.status(404).json({ success: false, message: "Ad not found" });
-    }
-
-    const request = await Request.create({
-      ad: adId,
-      sender: req.user._id,
-      receiver: ad.user._id,
-      message,
-    });
-
-    await Notification.create({
-      receiver: ad.user._id,
-      sender: req.user._id, 
-      type: "REQUEST",
-      message: "You received a new request for your announcement",
-      link: "/dashboard/requests",
-    });
-
-    res.status(201).json({
-      success: true,
-      request,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Error creating request",
-    });
-  }
-};
 
 export const getNotifications=async(req,res )=>{
     try {
