@@ -35,7 +35,7 @@ export const sendMessage=async (req,res)=>{
             sender: req.user._id,
             type: "MESSAGE",
             message: `${req.user.firstName}-${req.user.lastName} vous a envoyé un nouveau message`,
-            link: `/dashboard/demandes`,
+            link: `/dashboard/messages`,
           });
         }
 

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 
 const NAVBAR_HEIGHT = 64;
 
-const Demandes = () => {
+const Messages = () => {
   const [searchParams] = useSearchParams();
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
@@ -245,4 +245,4 @@ const Demandes = () => {
   );
 };
 
-export default Demandes;
+export default Messages;

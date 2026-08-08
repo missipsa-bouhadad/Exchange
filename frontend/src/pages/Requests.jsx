@@ -63,7 +63,7 @@ const Requests = () => {
       );
 
       if (data.success) {
-        navigate(`/dashboard/demandes`, {
+        navigate(`/dashboard/messages`, {
           state: { selectedChatId: data.chat._id },
         });
       }

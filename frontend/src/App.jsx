@@ -12,7 +12,7 @@ import NavBar from './components/NavBar'
 import { CustomToaster } from "./components/ui/sonner"
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
-import Demandes from './pages/Demandes'
+import Messages from './pages/Messages'
 import Requests from "./pages/Requests";
 import SentRequests from "./pages/SentRequests";
 import AdDetail from "@/pages/AdDetail.jsx";
@@ -115,10 +115,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "demandes",
+        path: "messages",
         element: (
           <>
-            <Demandes />
+            <Messages />
           </>
         ),
       },

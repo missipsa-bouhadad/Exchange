@@ -155,7 +155,7 @@ const SentRequests = () => {
                 <p className="mt-4 text-sm font-medium text-mauve-fonce">
                   Votre demande a été acceptée, retrouvez la conversation dans
                   <Link
-                    to="/dashboard/demandes"
+                    to="/dashboard/messages"
                     className="ml-1 underline underline-offset-2 hover:text-mauve-fonce/80"
                   >
                     Messages

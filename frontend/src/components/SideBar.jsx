@@ -27,7 +27,7 @@ function SideBar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/demandes"
+        to="/dashboard/messages"
         className={({ isActive }) =>
           `px-6 py-3 hover:bg-mauve-fonce hover:text-blanc transition-colors ${
             isActive ? "bg-mauve-fonce text-blanc font-semibold border-l-4 border-mauve-fonce" : ""

@@ -137,7 +137,7 @@ const NavBar = () => {
                     <Link to="/dashboard/ads">Mes annonces</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/demandes">Messages</Link>
+                    <Link to="/dashboard/messages">Messages</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard/requests">Demandes</Link>
