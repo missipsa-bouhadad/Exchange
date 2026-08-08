@@ -30,14 +30,14 @@ export const createRequest = async (req, res) => {
       receiver: ad.user,
       sender: req.user._id,
       type: "REQUEST",
-      message: "Vous avez reçu une nouvelle demande pour votre annonce",
+      message: "You received a new request for your ad",
       link: "/dashboard/requests",
     });
 
     res.json({ success: true, data: request });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, error: "Erreur serveur" });
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };
 
@@ -51,8 +51,8 @@ export const getReceivedRequests = async (req, res) => {
 
     res.json({ success: true, data: requests });
   } catch (error) {
-    console.error("Erreur getReceivedRequests :", error);
-    res.status(500).json({ success: false, error: "Erreur serveur" });
+    console.error("Error getReceivedRequests:", error);
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };
 
@@ -65,7 +65,7 @@ export const getSentRequests = async (req, res) => {
 
     res.json({ success: true, data: requests });
   } catch (error) {
-    console.error("Erreur getSentRequests :", error);
+    console.error("Error getSentRequests:", error);
     res.status(500).json({ success: false, error: "Server error" });
   }
 };
@@ -76,10 +76,10 @@ export const acceptRequest = async (req, res) => {
     const requestId = req.params.id;
 
     const request = await Request.findById(requestId).populate("ad");
-    if (!request) return res.status(404).json({ error: "Demande introuvable" });
+    if (!request) return res.status(404).json({ error: "Request not found" });
 
     if (request.toUser.toString() !== req.user._id.toString())
-      return res.status(403).json({ error: "Non autorisé" });
+      return res.status(403).json({ error: "Unauthorized" });
 
     request.status = "ACCEPTED";
     await request.save();
@@ -97,7 +97,7 @@ export const acceptRequest = async (req, res) => {
     res.json({ success: true, chat });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, error: "Erreur serveur" });
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };
 
@@ -107,10 +107,10 @@ export const rejectRequest = async (req, res) => {
     const requestId = req.params.id;
 
     const request = await Request.findById(requestId);
-    if (!request) return res.status(404).json({ error: "Demande introuvable" });
+    if (!request) return res.status(404).json({ error: "Request not found" });
 
     if (request.toUser.toString() !== req.user._id.toString())
-      return res.status(403).json({ error: "Non autorisé" });
+      return res.status(403).json({ error: "Unauthorized" });
 
     request.status = "REJECTED";
     await request.save();
@@ -118,6 +118,6 @@ export const rejectRequest = async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, error: "Erreur serveur" });
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };

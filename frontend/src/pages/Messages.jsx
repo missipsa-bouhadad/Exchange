@@ -50,11 +50,11 @@ const Messages = () => {
           }
         }
       } else {
-        setError("erreur récupération chats !");
+        setError("Failed to fetch chats");
       }
     } catch (err) {
-      console.error("erreur", err);
-      setError("erreur");
+      console.error("Error:", err);
+      setError("Error");
     } finally {
       setLoadingChats(false);
     }
@@ -81,11 +81,11 @@ const Messages = () => {
           setMessages(data.data);
           setTimeout(scrollToBottom, 50);
         } else {
-          setError("Erreur récupération messages");
+          setError("Failed to fetch messages");
         }
       } catch (err) {
         console.error("Erreur fetch messages:", err);
-        setError("Erreur fetch messages");
+        setError("Failed to fetch messages");
       } finally {
         setLoadingMessages(false);
       }
@@ -138,7 +138,7 @@ const Messages = () => {
         <ScrollArea className="h-[calc(100vh-120px)]">
           <div className="flex flex-col gap-3">
             {loadingChats ? (
-              <div className="text-center py-6">chargement...</div>
+              <div className="text-center py-6">Loading...</div>
             ) : chats.length === 0 ? (
               <div className="text-center py-6 text-mauve-fonce/70">
                 aucune conversation
@@ -194,7 +194,7 @@ const Messages = () => {
 
             <ScrollArea className="flex-1 overflow-auto p-2">
               {loadingMessages ? (
-                <div>chargement des messages...</div>
+                <div>Loading messages...</div>
               ) : messages.length === 0 ? (
                 <div className="text-mauve-fonce/70">
                   commencer la conversation

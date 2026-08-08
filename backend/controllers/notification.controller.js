@@ -12,7 +12,7 @@ export const getNotifications=async(req,res )=>{
     } catch (error) {
         res.status(500).json({
           success: false,
-          message: "erreur lors de la récupération des notifications",
+          message: "Failed to fetch notifications",
         });
     }
 } 
@@ -35,10 +35,10 @@ export const markNotificationRead = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "erreur lors de la récupération de la notification",
+      message: "Failed to fetch notification",
     });
   }
-}; 
+};
 
 export const markAllNotificationsAsRead = async (req, res) => {
   try {

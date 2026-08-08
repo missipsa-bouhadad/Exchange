@@ -8,7 +8,7 @@ export const sendMessage=async (req,res)=>{
     if ((!content && !requestedObject) || !chatId) {
       return res
         .status(400)
-        .json({ success: false, message: "Données manquantes !" });
+        .json({ success: false, message: "Missing data" });
     }
 
 
@@ -45,7 +45,7 @@ export const sendMessage=async (req,res)=>{
         res.status(201).json({ success: true, data: newMessage });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: false, message:"erreur serveur" });
+        res.status(500).json({ success: false, message:"Server error" });
     }
 }
 
@@ -59,6 +59,6 @@ export const getMessages=async (req,res)=>{
         res.status(200).json({success:true,data:messages})
     } catch (error) {
         console.log(error)
-        res.status(500).json({success:false,message:"erreur serveur"})
+        res.status(500).json({success:false,message:"Server error"})
     }
 }

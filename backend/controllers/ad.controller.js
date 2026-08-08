@@ -17,7 +17,7 @@ export const createAd=async(req,res)=>{
         if (!title || !description || !type || !city) {
             return res.status(400).json({
                 success: false,
-                message: "Tous les champs sont obligatoires"
+                message: "All fields are required"
             });
         }
 
@@ -72,11 +72,11 @@ export const updateAd = async (req, res) => {
 
         const ad = await Ad.findById(adId);
         if (!ad) {
-            return res.status(404).json({ success: false, message: "Annonce introuvable." });
+            return res.status(404).json({ success: false, message: "Ad not found." });
         }
 
         if (ad.user.toString() !== userId) {
-            return res.status(403).json({ success: false, message: "Vous n'êtes pas autorisé à modifier cette annonce." });
+            return res.status(403).json({ success: false, message: "You are not allowed to update this ad." });
         }
 
         let newImageUrl = ad.imageUrl;
@@ -107,13 +107,13 @@ export const updateAd = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Annonce mise à jour avec succès.",
+            message: "Ad updated successfully.",
             ad
         });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: "Erreur serveur lors de la modification." });
+        return res.status(500).json({ success: false, message: "Server error while updating ad." });
     }
 };
 
@@ -156,12 +156,12 @@ export const getAdById = async (req, res) => {
         const ad = await Ad.findById(req.params.id).populate('user');
 
         if (!ad) {
-            return res.status(404).json({ message: "Annonce introuvable" });
+            return res.status(404).json({ message: "Ad not found" });
         }
 
         res.status(200).json(ad);
     } catch (error) {
-        res.status(500).json({ message: "Erreur serveur", error });
+        res.status(500).json({ message: "Server error", error });
     }
 };
 
@@ -174,17 +174,17 @@ export const removeAd = async (req, res) => {
         const ad = await Ad.findById(id);
 
         if (!ad) {
-            return res.status(404).json({ success: false, message: "Annonce introuvable" });
+            return res.status(404).json({ success: false, message: "Ad not found" });
         }
 
         if (ad.user.toString() !== userId) {
-            return res.status(403).json({ success: false, message: "Vous n'êtes pas autorisé à supprimer cette annonce" });
+            return res.status(403).json({ success: false, message: "You are not allowed to delete this ad" });
         }
 
         await Ad.deleteOne({_id:id}).populate('user');
 
-        res.status(200).json({ success: true, message: "Annonce supprimée avec succès" });
+        res.status(200).json({ success: true, message: "Ad deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Erreur serveur", error });
+        res.status(500).json({ message: "Server error", error });
     }
 };

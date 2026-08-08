@@ -11,7 +11,7 @@ export const register = async (req, res) => {
         if (!email || !firstName || !lastName || !password || !bio) {
             return res.status(400).json({
                 success: false,
-                message: "all fiels are required"
+                message: "All fields are required"
             })
         }
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -19,7 +19,7 @@ export const register = async (req, res) => {
         if (!emailRegex.test(email)) {
             return res.status(400).json({
                 success: false,
-                message: "invalid email"
+                message: "Invalid email"
             })
         }
         if (password.length < 6) {
@@ -33,7 +33,7 @@ export const register = async (req, res) => {
         if (existingUserByEmail) {
             return res.status(400).json({
                 success: false,
-                message: "email already used"
+                message: "Email already in use"
             })
         }
         const hashPassword = await bcrypt.hash(password, 10)
@@ -49,7 +49,7 @@ export const register = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: "failed to register"
+            message: "Failed to register"
         })
 
     }
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
-                message: "all fields are required"
+                message: "All fields are required"
             })
         }
         const userByEmail = await User.findOne({ email: email })
@@ -92,7 +92,7 @@ export const login = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: "failed to login"
+            message: "Failed to login"
         })
     }
 }
@@ -228,7 +228,7 @@ export const forgotPassword = async (req, res) => {
                 Réinitialiser mon mot de passe
               </a>
             </p>
-            <p style="color: #888; font-size: 12px;">Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.</p>
+            <p style="color: #888; font-size: 12px;">If you did not request this, please ignore this message.</p>
           </div>
         `,
       });
