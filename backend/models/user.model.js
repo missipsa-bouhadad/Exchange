@@ -47,6 +47,12 @@ const userSchema = mongoose.Schema(
       type: Date,
       default: null,
     },
+    favorites: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ad",
+      },
+    ],
   },
   { timestamps: true }
 ); //timestamps pour ajouter createdAt et updatedAt

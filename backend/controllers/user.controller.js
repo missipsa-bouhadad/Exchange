@@ -190,6 +190,70 @@ export const getMe = async (req, res) => {
   }
 };
 
+export const toggleFavorite = async (req, res) => {
+  try {
+    const adId = req.params.adId;
+    const user = await User.findById(req.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const index = user.favorites.findIndex((fav) => fav.toString() === adId);
+    let added;
+    if (index >= 0) {
+      user.favorites.splice(index, 1);
+      added = false;
+    } else {
+      user.favorites.push(adId);
+      added = true;
+    }
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      added,
+      favorites: user.favorites,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while updating favorites",
+    });
+  }
+};
+
+export const getMyFavorites = async (req, res) => {
+  try {
+    const user = await User.findById(req.id).populate({
+      path: "favorites",
+      populate: { path: "user", select: "firstName lastName email photoUrl" },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: user.favorites,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching favorites",
+    });
+  }
+};
+
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;

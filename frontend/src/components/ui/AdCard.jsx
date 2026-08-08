@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Heart } from "lucide-react";
 import UpdateAdModal from "@/components/ui/UpdateAdModal.jsx";
 import RemovalConfirmation from "@/components/ui/RemovalConfirmation.jsx";
+import useFavorites from "@/hooks/useFavorites";
 
 const AdCard = ({ ad, isUserAd, onDeleteSuccess, onUpdateSuccess}) => {
     const isSkill = ad.type === 'SKILL';
+    const { isFavorite, toggleFavorite } = useFavorites();
+    const favorited = isFavorite(ad._id);
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
@@ -84,12 +88,36 @@ const AdCard = ({ ad, isUserAd, onDeleteSuccess, onUpdateSuccess}) => {
                                 {ad.city || 'Inconnue'}
                             </div>
 
-                            <Link
-                                to={`/ad/${ad._id}`}
-                                className="bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm inline-block text-center"
-                            >
-                                Voir détails
-                            </Link>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        toggleFavorite(ad._id);
+                                    }}
+                                    aria-label={
+                                        favorited
+                                            ? "Retirer des favoris"
+                                            : "Ajouter aux favoris"
+                                    }
+                                    className="p-1 rounded-full hover:bg-mauve-clair transition"
+                                >
+                                    <Heart
+                                        className={`w-5 h-5 ${
+                                            favorited
+                                                ? "fill-mauve-fonce text-mauve-fonce"
+                                                : "text-mauve-fonce/50"
+                                        }`}
+                                    />
+                                </button>
+
+                                <Link
+                                    to={`/ad/${ad._id}`}
+                                    className="bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm inline-block text-center"
+                                >
+                                    Voir détails
+                                </Link>
+                            </div>
                         </>
                     )}
                 </div>

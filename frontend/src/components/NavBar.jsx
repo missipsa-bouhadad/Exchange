@@ -145,6 +145,9 @@ const NavBar = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard/sent-requests">Demandes envoyées</Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/favorites">Favoris</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={logoutHandler}

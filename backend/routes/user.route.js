@@ -1,5 +1,5 @@
 import express from 'express'
-import {register,login, logout,updateProfile, getAllUsers,getMe, forgotPassword, resetPassword} from '../controllers/user.controller.js'
+import {register,login, logout,updateProfile, getAllUsers,getMe, forgotPassword, resetPassword, toggleFavorite, getMyFavorites} from '../controllers/user.controller.js'
 import { isAuthenticated } from '../middleware/isAuthenticated.js'
 import { singleUpload } from '../middleware/multer.js'
 
@@ -13,6 +13,8 @@ router.route('/forgot-password').post(forgotPassword)
 router.route('/reset-password/:token').post(resetPassword)
 router.get("/", isAuthenticated, getAllUsers);
 router.get("/me", isAuthenticated, getMe);
+router.post("/favorites/:adId", isAuthenticated, toggleFavorite);
+router.get("/favorites", isAuthenticated, getMyFavorites);
 
 
 export default router

@@ -7,6 +7,7 @@ const tabs = [
   { to: "/dashboard/messages", label: "Messages" },
   { to: "/dashboard/requests", label: "Demandes d'échange" },
   { to: "/dashboard/sent-requests", label: "Demandes envoyées" },
+  { to: "/dashboard/favorites", label: "Favoris" },
 ];
 
 const DashboardTabs = () => {

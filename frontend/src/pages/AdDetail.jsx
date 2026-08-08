@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
+import { Heart } from "lucide-react";
+import useFavorites from "@/hooks/useFavorites";
 
 const AdDetail = () => {
   const { id } = useParams();
@@ -12,6 +14,7 @@ const AdDetail = () => {
   const [error, setError] = useState(null);
   const [showRequestInput, setShowRequestInput] = useState(false);
   const [requestedObject, setRequestedObject] = useState("");
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     const fetchAdDetail = async () => {
@@ -205,9 +208,28 @@ const AdDetail = () => {
                 </span>
               </div>
 
-              <h1 className="text-3xl font-extrabold text-mauve-fonce mb-4">
-                {ad.title}
-              </h1>
+              <div className="flex items-start gap-3 mb-4">
+                <h1 className="text-3xl font-extrabold text-mauve-fonce leading-tight">
+                  {ad.title}
+                </h1>
+                {ad?.user?._id !== undefined && (
+                  <button
+                    onClick={() => toggleFavorite(ad._id)}
+                    aria-label={
+                      isFavorite(ad._id) ? "Retirer des favoris" : "Ajouter aux favoris"
+                    }
+                    className="p-1 rounded-full hover:bg-mauve-clair transition self-center"
+                  >
+                    <Heart
+                      className={`w-6 h-6 ${
+                        isFavorite(ad._id)
+                          ? "fill-mauve-fonce text-mauve-fonce"
+                          : "text-mauve-fonce/40"
+                      }`}
+                    />
+                  </button>
+                )}
+              </div>
 
               <div className="prose text-mauve-fonce/80 mb-6">
                 <h3 className="text-lg font-semibold text-mauve-fonce mb-2">
