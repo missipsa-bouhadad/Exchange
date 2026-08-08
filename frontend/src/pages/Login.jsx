@@ -101,17 +101,9 @@ const Login = () => {
               </div>
 
               <div className="grid gap-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-mauve-fonce/70" /> Mot de passe
-                  </Label>
-                  <a
-                    href="#"
-                    className="text-sm text-mauve-fonce hover:underline underline-offset-4"
-                  >
-                    Mot de passe oublié ?
-                  </a>
-                </div>
+                <Label htmlFor="password" className="flex items-center gap-2">
+                  <Lock className="h-4 w-4 text-mauve-fonce/70" /> Mot de passe
+                </Label>
                 <div className="relative">
                   <Input
                     name="password"
@@ -134,6 +126,12 @@ const Login = () => {
                     )}
                   </button>
                 </div>
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-mauve-fonce hover:underline underline-offset-4 text-right"
+                >
+                  Mot de passe oublié ?
+                </Link>
               </div>
             </div>
 

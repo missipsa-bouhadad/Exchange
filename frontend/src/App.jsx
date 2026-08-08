@@ -17,6 +17,8 @@ import Demandes from './pages/Demandes'
 import Requests from "./pages/Requests";
 import AdDetail from "@/pages/AdDetail.jsx";
 import UserAnnouncements from "@/pages/UserAnnouncements.jsx";
+import ForgotPassword from "@/pages/ForgotPassword.jsx";
+import ResetPassword from "@/pages/ResetPassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +50,24 @@ const router = createBrowserRouter([
       <>
         <NavBar />
         <SignUp />
+      </>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <>
+        <NavBar />
+        <ForgotPassword />
+      </>
+    ),
+  },
+  {
+    path: "/reset-password/:token",
+    element: (
+      <>
+        <NavBar />
+        <ResetPassword />
       </>
     ),
   },
