@@ -1,6 +1,7 @@
 import { Ad } from '../models/ad.model.js'
 import cloudinary from '../utils/cloudinary.js'
 import getDataUri from '../utils/dataUri.js'
+import { getPublicIdFromUrl } from '../utils/cloudinaryHelper.js'
 import mongoose from "mongoose";
 
 export const createAd=async(req,res)=>{
@@ -81,7 +82,10 @@ export const updateAd = async (req, res) => {
         let newImageUrl = ad.imageUrl;
 
         if (req.file) {
-            await cloudinary.uploader.destroy(ad.imageUrl);
+            const oldPublicId = getPublicIdFromUrl(ad.imageUrl);
+            if (oldPublicId) {
+                await cloudinary.uploader.destroy(oldPublicId);
+            }
             const cloudResponse = await cloudinary.uploader.upload(req.file.path);
             newImageUrl = cloudResponse.secure_url;
         }
