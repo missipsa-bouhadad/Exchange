@@ -35,6 +35,12 @@ const AdCard = ({ ad, isUserAd, onDeleteSuccess, onUpdateSuccess}) => {
                 <span className={`absolute top-2 right-2 text-blanc text-xs font-bold px-3 py-1 rounded-full shadow-sm ${isSkill ? 'bg-mauve-fonce/20 backdrop-blur-sm' : 'bg-mauve-fonce'}`}>
           {isSkill ? 'Compétence' : 'Objet'}
         </span>
+
+                {ad.status === "EXCHANGED" && (
+                    <span className="absolute top-2 left-2 bg-mauve-clair text-mauve-fonce text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                        Échangée
+                    </span>
+                )}
             </div>
 
             <div className="p-5 flex flex-col flex-grow">

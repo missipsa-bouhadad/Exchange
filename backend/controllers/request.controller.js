@@ -12,7 +12,12 @@ export const createRequest = async (req, res) => {
     if (!ad)
       return res
         .status(404)
-        .json({ success: false, error: "Annonce introuvable" });
+        .json({ success: false, error: "Ad not found" });
+
+    if (ad.status === "EXCHANGED")
+      return res
+        .status(400)
+        .json({ success: false, error: "This ad has already been exchanged" });
 
     const request = await Request.create({
       ad: adId,
@@ -64,6 +69,10 @@ export const acceptRequest = async (req, res) => {
 
     request.status = "ACCEPTED";
     await request.save();
+
+    // Marquer l'annonce comme échangée
+    request.ad.status = "EXCHANGED";
+    await request.ad.save();
 
     const chat = await Chat.create({
       chatName: request.ad.title,

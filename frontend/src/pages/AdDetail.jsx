@@ -36,6 +36,11 @@ const AdDetail = () => {
       return;
     }
 
+    if (ad.status !== "AVAILABLE") {
+      toast.error("Cette annonce a déjà été échangée.");
+      return;
+    }
+
     try {
       const { data } = await axios.post(
         "http://localhost:8000/api/v1/requests",
@@ -180,7 +185,7 @@ const AdDetail = () => {
                     isAvailable ? "bg-mauve-fonce" : "bg-mauve-clair text-mauve-fonce"
                   } px-3 py-1 rounded-md`}
                 >
-                  {ad.status === "AVAILABLE" ? "Disponible" : "Indisponible"}
+                  {ad.status === "AVAILABLE" ? "Disponible" : "Échangée"}
                 </span>
                 <span className="text-mauve-fonce/70 text-sm flex items-center">
                   <svg
@@ -268,14 +273,14 @@ const AdDetail = () => {
                   </div>
                   <button
                     onClick={() => setShowRequestInput(true)}
-                    disabled={showRequestInput}
+                    disabled={showRequestInput || !isAvailable}
                     className={`font-bold py-3 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl ${
-                      showRequestInput
+                      showRequestInput || !isAvailable
                         ? "bg-mauve-clair cursor-not-allowed text-mauve-fonce/70"
                         : "bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc"
                     }`}
                   >
-                    Contacter
+                    {isAvailable ? "Contacter" : "Indisponible"}
                   </button>
                 </div>
                 {showRequestInput && (
