@@ -49,17 +49,17 @@ const AdDetail = () => {
       );
 
       if (data.success) {
-        toast.success("Your request has been sent !");
+        toast.success("Votre demande a bien été envoyée !");
         setShowRequestInput(false);
         setRequestedObject("");
       }
     } catch (error) {
       if (error.response?.status === 401) {
-        toast.error("You must be logged in !");
+        toast.error("Vous devez être connecté !");
         navigate("/login");
         return;
       }
-      toast.error("Error sending request. Please try again.");
+      toast.error("Erreur lors de l'envoi de la demande. Veuillez réessayer.");
     }
   };
 

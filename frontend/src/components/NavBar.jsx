@@ -60,7 +60,7 @@ const NavBar = () => {
         navigate("/");
       }
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error("Échec de la déconnexion");
     }
   };
 

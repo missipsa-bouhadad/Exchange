@@ -113,7 +113,7 @@ const Profile = () => {
         setOpen(false); 
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "echec de la mise à jour.");
+      toast.error(error.response?.data?.message || "Échec de la mise à jour.");
       console.log(error);
     } finally {
       setIsLoading(false); 
@@ -148,7 +148,7 @@ const Profile = () => {
 
           setInput((prev) => ({ ...prev, location: detectedLocation }));
         } catch (err) {
-          toast.error("echec de la récupération de la localisation.");
+          toast.error("Échec de la récupération de la localisation.");
         } finally {
           setIsLocating(false);
         }
