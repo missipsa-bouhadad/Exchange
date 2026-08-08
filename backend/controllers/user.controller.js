@@ -104,8 +104,11 @@ export const logout=async(_,res)=>{
             message:`logout successfuly`
         })
     } catch (error) {
-        console.log(error);
-        
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while logging out"
+        });
     }
 }
 

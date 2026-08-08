@@ -55,7 +55,11 @@ export const createAd=async(req,res)=>{
             ad: await Ad.findOne({ title, description, user: userId})
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while creating ad"
+        });
     }
 }
 
@@ -117,7 +121,11 @@ export const getAllAds=async(req,res)=>{
             ads
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while fetching ads"
+        });
     }
 }
 
@@ -131,7 +139,11 @@ export const getUserAds=async(req,res)=>{
             userAds
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while fetching user ads"
+        });
     }
 }
 
