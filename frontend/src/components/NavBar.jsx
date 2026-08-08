@@ -140,8 +140,12 @@ const NavBar = () => {
                     <Link to="/dashboard/messages">Messages</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/requests">Demandes</Link>
+                    <Link to="/dashboard/requests">Demandes d'échange</Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/sent-requests">Demandes envoyées</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={logoutHandler}
                     className="text-mauve-fonce focus:text-mauve-fonce"

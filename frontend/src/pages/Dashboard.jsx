@@ -1,12 +1,12 @@
-import SideBar from '../components/SideBar'
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import DashboardTabs from '../components/DashboardTabs'
 
 function Dashboard() {
   return (
-    <div className="flex flex-row min-h-screen bg-blanc">
-      <SideBar />
-      <div className="flex-1 ml-[200px] md:ml-[250px] p-6">
+    <div className="min-h-screen bg-blanc pt-16">
+      <DashboardTabs />
+      <div className="px-4 py-8">
         <Outlet />
       </div>
     </div>
