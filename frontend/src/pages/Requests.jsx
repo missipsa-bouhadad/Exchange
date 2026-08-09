@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
+import { toast } from "sonner";
 
 
 
@@ -74,7 +75,7 @@ const Requests = () => {
           req._id === id ? { ...req, status: "PENDING" } : req
         )
       );
-      alert("Une erreur est survenue lors de l'acceptation.");
+      toast.error("Une erreur est survenue lors de l'acceptation.");
     }
   };
 
@@ -89,7 +90,7 @@ const Requests = () => {
       );
 
     } catch (err) {
-      alert("Une erreur est survenue lors du rejet.");
+      toast.error("Une erreur est survenue lors du rejet.");
     }
   };
 
@@ -212,7 +213,7 @@ const Requests = () => {
                     className={`text-center font-medium ${
                       req.status === "ACCEPTED"
                         ? "text-mauve-fonce"
-                        : "text-mauve-fonce"
+                        : "text-mauve-fonce/50 line-through"
                     }`}
                   >
                     {req.status === "ACCEPTED"
