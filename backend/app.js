@@ -30,4 +30,13 @@ app.use("/api/v1/messages", messageRoute);
 app.use("/api/v1/notifications", notificationRoute);
 app.use("/api/v1/ratings", ratingRoute);
 
+// error handler (translates errors into JSON responses)
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  return res.status(statusCode).json({
+    success: false,
+    message: err.message || "Server error",
+  });
+});
+
 export default app;
