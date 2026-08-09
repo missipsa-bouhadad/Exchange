@@ -3,11 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
+import { useSelector } from "react-redux";
 import useFavorites from "@/hooks/useFavorites";
 
 const AdDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.user);
 
   const [ad, setAd] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -293,17 +295,23 @@ const AdDetail = () => {
                         : "Utilisateur introuvable"}
                     </p>
                   </div>
-                  <button
-                    onClick={() => setShowRequestInput(true)}
-                    disabled={showRequestInput || !isAvailable}
-                    className={`font-bold py-3 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl ${
-                      showRequestInput || !isAvailable
-                        ? "bg-mauve-clair cursor-not-allowed text-mauve-fonce/70"
-                        : "bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc"
-                    }`}
-                  >
-                    {isAvailable ? "Contacter" : "Indisponible"}
-                  </button>
+                  {String(ad.user?._id) === String(currentUser?._id) ? (
+                    <span className="text-sm text-mauve-fonce/70 italic">
+                      C'est votre annonce
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setShowRequestInput(true)}
+                      disabled={showRequestInput || !isAvailable}
+                      className={`font-bold py-3 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl ${
+                        showRequestInput || !isAvailable
+                          ? "bg-mauve-clair cursor-not-allowed text-mauve-fonce/70"
+                          : "bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc"
+                      }`}
+                    >
+                      {isAvailable ? "Contacter" : "Indisponible"}
+                    </button>
+                  )}
                 </div>
                 {showRequestInput && (
                   <div className="mt-4 p-6 border border-mauve-clair rounded-xl shadow-md bg-blanc">
