@@ -9,6 +9,7 @@ const chatSchema = new mongoose.Schema(
       ref: "Message",
     },
     adDescription: { type: String },
+    request: { type: mongoose.Schema.Types.ObjectId, ref: "Request" },
   },
   { timestamps: true }
 );

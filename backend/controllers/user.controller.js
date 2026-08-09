@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { User } from '../models/user.model.js'
+import { Ad } from '../models/ad.model.js'
+import { Rating } from '../models/rating.model.js'
 import jwt from 'jsonwebtoken'
 import cloudinary from '../utils/cloudinary.js'
 import getDataUri from '../utils/dataUri.js'
@@ -183,6 +185,65 @@ export const getMe = async (req, res) => {
       user: req.user,
     });
   } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch user",
+    });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user id",
+      });
+    }
+    const user = await User.findById(id).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const [activeAds, totalAds, ratingsAgg] = await Promise.all([
+      Ad.countDocuments({ user: id, status: "AVAILABLE" }),
+      Ad.countDocuments({ user: id }),
+      Rating.aggregate([
+        { $match: { toUser: user._id } },
+        {
+          $group: {
+            _id: null,
+            avg: { $avg: "$value" },
+            count: { $sum: 1 },
+          },
+        },
+      ]),
+    ]);
+
+    const avgRating =
+      ratingsAgg.length > 0
+        ? Math.round(ratingsAgg[0].avg * 10) / 10
+        : 0;
+    const ratingsCount = ratingsAgg.length > 0 ? ratingsAgg[0].count : 0;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        user,
+        stats: {
+          activeAds,
+          totalAds,
+          avgRating,
+          ratingsCount,
+        },
+      },
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch user",

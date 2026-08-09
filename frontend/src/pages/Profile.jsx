@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -43,7 +43,13 @@ const Profile = () => {
   const { user } = useSelector((state) => state.auth);
 
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [stats, setStats] = useState({
+    activeAds: 0,
+    totalAds: 0,
+    avgRating: 0,
+    ratingsCount: 0,
+  });
   const [input, setInput] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -54,6 +60,25 @@ const Profile = () => {
     file: user?.photoUrl || "", 
   });
   const [isLocating, setIsLocating] = useState(false);
+
+  // Charger les stats réelles depuis l'API
+  useEffect(() => {
+    if (!user?._id) return;
+    const fetchStats = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8000/api/v1/user/${user._id}`,
+          { withCredentials: true }
+        );
+        if (data.success && data.data.stats) {
+          setStats(data.data.stats);
+        }
+      } catch (err) {
+        console.error("Erreur chargement stats profil:", err);
+      }
+    };
+    fetchStats();
+  }, [user?._id]);
 
 
   // pour formater la date createdAt 
@@ -393,7 +418,9 @@ const Profile = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
           <Card className="shadow-md border-t-4 border-t-mauve-fonce">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-mauve-fonce">12</p>
+              <p className="text-4xl font-extrabold text-mauve-fonce">
+                {stats.activeAds}
+              </p>
               <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
                 Annonces actives
               </p>
@@ -401,7 +428,9 @@ const Profile = () => {
           </Card>
           <Card className="shadow-md border-t-4 border-t-mauve-fonce">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-mauve-fonce">34</p>
+              <p className="text-4xl font-extrabold text-mauve-fonce">
+                {stats.totalAds}
+              </p>
               <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
                 Annonces publiées
               </p>
@@ -409,9 +438,13 @@ const Profile = () => {
           </Card>
           <Card className="shadow-md border-t-4 border-t-mauve-fonce">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-mauve-fonce">4.8 ★</p>
+              <p className="text-4xl font-extrabold text-mauve-fonce">
+                {stats.ratingsCount > 0 ? `${stats.avgRating} ★` : "—"}
+              </p>
               <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
-                Note moyenne
+                Note moyenne{stats.ratingsCount > 0
+                  ? ` (${stats.ratingsCount})`
+                  : ""}
               </p>
             </CardContent>
           </Card>

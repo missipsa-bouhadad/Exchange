@@ -4,13 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { toast } from "sonner";
+import { Star } from "lucide-react";
+import RatingModal from "@/components/ui/RatingModal";
 
 
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [ratingRequestId, setRatingRequestId] = useState(null);
+  const [ratedIds, setRatedIds] = useState(new Set());
 
   const navigate = useNavigate();
 
@@ -48,6 +53,32 @@ const Requests = () => {
 
     fetchRequests();
   }, []);
+
+  // Load existing ratings for accepted requests
+  useEffect(() => {
+    const loadMyRatings = async () => {
+      try {
+        const rated = new Set();
+        await Promise.all(
+          requests
+            .filter((r) => r.status === "ACCEPTED")
+            .map(async (r) => {
+              try {
+                const { data: rd } = await axios.get(
+                  `http://localhost:8000/api/v1/ratings/request/${r._id}/me`,
+                  { withCredentials: true }
+                );
+                if (rd.data) rated.add(r._id);
+              } catch {}
+            })
+        );
+        setRatedIds(rated);
+      } catch (err) {
+        // silent
+      }
+    };
+    loadMyRatings();
+  }, [requests]);
 
   const acceptRequest = async (id) => {
     try {
@@ -208,7 +239,7 @@ const Requests = () => {
                 </div>
               )}
               {req.status !== "PENDING" && (
-                <div className="pt-4 border-t border-mauve-clair">
+                <div className="pt-4 border-t border-mauve-clair flex items-center justify-between">
                   <p
                     className={`text-center font-medium ${
                       req.status === "ACCEPTED"
@@ -220,12 +251,35 @@ const Requests = () => {
                       ? "Requête acceptée"
                       : "Requête refusée"}
                   </p>
+                  {req.status === "ACCEPTED" &&
+                    !ratedIds.has(req._id) && (
+                      <button
+                        onClick={() => {
+                          setRatingRequestId(req._id);
+                          setRatingOpen(true);
+                        }}
+                        className="flex items-center gap-1 bg-mauve-fonce hover:bg-mauve-fonce/90 text-blanc text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                      >
+                        <Star className="w-4 h-4" /> Noter
+                      </button>
+                    )}
                 </div>
               )}
             </div>
           ))}
         </div>
       )}
+
+      <RatingModal
+        open={ratingOpen}
+        onOpenChange={setRatingOpen}
+        requestId={ratingRequestId}
+        onSuccess={() => {
+          if (ratingRequestId) {
+            setRatedIds((prev) => new Set([...prev, ratingRequestId]));
+          }
+        }}
+      />
     </div>
   );
 };

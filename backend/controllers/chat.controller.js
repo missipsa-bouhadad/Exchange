@@ -16,6 +16,7 @@ export const getChats = async (req, res) => {
           select: "firstName lastName email",
         },
       })
+      .populate("request", "status fromUser toUser")
       .sort({ updatedAt: -1 });
 
     return res.status(200).json({

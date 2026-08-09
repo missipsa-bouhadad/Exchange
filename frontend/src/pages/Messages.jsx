@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
+import RatingModal from "@/components/ui/RatingModal";
 
 
 const NAVBAR_HEIGHT = 64;
@@ -19,6 +21,8 @@ const Messages = () => {
   const [loadingChats, setLoadingChats] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [error, setError] = useState(null);
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [hasRated, setHasRated] = useState(false);
   const messagesEndRef = useRef(null);
 
   //utilisateur connecté
@@ -69,6 +73,7 @@ const Messages = () => {
     const fetchMessages = async () => {
       if (!selectedChat) {
         setMessages([]);
+        setHasRated(false);
         return;
       }
       setLoadingMessages(true);
@@ -88,6 +93,21 @@ const Messages = () => {
         setError("Erreur lors de la récupération des messages");
       } finally {
         setLoadingMessages(false);
+      }
+
+      // Vérifier si on a déjà noté cette requête
+      if (selectedChat.request?._id) {
+        try {
+          const { data } = await axios.get(
+            `http://localhost:8000/api/v1/ratings/request/${selectedChat.request._id}/me`,
+            { withCredentials: true }
+          );
+          setHasRated(Boolean(data.data));
+        } catch (err) {
+          setHasRated(false);
+        }
+      } else {
+        setHasRated(false);
       }
     };
 
@@ -180,7 +200,24 @@ const Messages = () => {
         ) : (
           <>
             <div className="border-b border-mauve-clair pb-4 mb-4 space-y-1 text-center">
-              <h2 className="text-2xl font-semibold">Conversation</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">Conversation</h2>
+                {selectedChat.request?.status === "ACCEPTED" && !hasRated && (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setRatingOpen(true)}
+                    className="flex items-center gap-1"
+                  >
+                    <Star className="w-4 h-4" /> Noter l'échange
+                  </Button>
+                )}
+                {hasRated && (
+                  <span className="text-xs text-mauve-fonce/70 italic">
+                    Vous avez déjà noté cet échange
+                  </span>
+                )}
+              </div>
 
               <div className="bg-mauve-clair border border-mauve-clair rounded-xl p-4 shadow-sm text-left mx-auto max-w-2xl">
                 <p className="text-sm text-mauve-fonce/70 tracking-wide font-semibold">
@@ -241,6 +278,13 @@ const Messages = () => {
           </>
         )}
       </div>
+
+      <RatingModal
+        open={ratingOpen}
+        onOpenChange={setRatingOpen}
+        requestId={selectedChat?.request?._id}
+        onSuccess={() => setHasRated(true)}
+      />
     </div>
   );
 };
