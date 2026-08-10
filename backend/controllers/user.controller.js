@@ -82,10 +82,15 @@ export const login = async (req, res) => {
         }
 
 
-        //token utilisé pour l'authentification
+        // JWT used for authentication
         const token=jwt.sign({userId:userByEmail._id},process.env.SECRET_KEY,{expiresIn:"1d"})
         const { password: _pwd, __v, ...userWithoutPassword } = userByEmail.toObject();
-        return res.status(200).cookie("token",token,{maxAge:1*24*60*60*1000,httpsOnly:true,sameSite:"strict"}).json({
+        return res.status(200).cookie("token",token,{
+            maxAge: 1*24*60*60*1000,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+        }).json({
             success:true,
             message:`welcome ${userByEmail.firstName}`,
             user: userWithoutPassword
