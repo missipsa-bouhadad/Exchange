@@ -171,18 +171,6 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-export const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find({ _id: { $ne: req.id } }).select("-password");
-    return res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Failed to fetch users" });
-  }
-};
-
 export const getMe = async (req, res) => {
   try {
     return res.status(200).json({
