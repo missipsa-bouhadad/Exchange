@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import AdCard from '../components/ui/AdCard';
 import {useSelector} from "react-redux";
 import CreateAdModal from "@/components/ui/CreateAdModal.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
+import useDebounce from "@/hooks/useDebounce";
+
+const PAGE_SIZE = 12;
 
 const Announcements = () => {
     const [ads, setAds] = useState([]);
@@ -18,11 +21,16 @@ const Announcements = () => {
     const [cityFilter, setCityFilter] = useState("");
     const [dateFilter, setDateFilter] = useState("");
     const [typeFilter, setTypeFilter] = useState("ALL");
+    const [page, setPage] = useState(1);
 
     // Geo search state
     const [userCoords, setUserCoords] = useState(null);
     const [radius, setRadius] = useState(10);
     const [geoLocating, setGeoLocating] = useState(false);
+
+    // Debounced values for filtering 
+    const debouncedSearch = useDebounce(searchTerm, 300);
+    const debouncedCity = useDebounce(cityFilter, 300);
 
     const fetchAds = async (coords = null, radiusKm = null) => {
         try {
@@ -73,28 +81,38 @@ const Announcements = () => {
         fetchAds();
     };
 
-    const filteredAds = ads.filter((ad) => {
-        const matchesType = typeFilter === "ALL" || ad.type === typeFilter;
+    const filteredAds = useMemo(() => {
+        return ads.filter((ad) => {
+            const matchesType = typeFilter === "ALL" || ad.type === typeFilter;
 
-        const searchLower = searchTerm.toLowerCase();
-        const matchesTitle = ad.title.toLowerCase().includes(searchLower);
-        const userName = ad.user ? `${ad.user.firstName} ${ad.user.lastName}` : "";
-        const matchesUser = userName.toLowerCase().includes(searchLower);
+            const searchLower = debouncedSearch.toLowerCase();
+            const matchesTitle = ad.title.toLowerCase().includes(searchLower);
+            const userName = ad.user ? `${ad.user.firstName} ${ad.user.lastName}` : "";
+            const matchesUser = userName.toLowerCase().includes(searchLower);
 
-        const matchesSearch = matchesTitle || matchesUser;
+            const matchesSearch = matchesTitle || matchesUser;
 
-        const matchesCity = cityFilter === "" || ad.city.toLowerCase().includes(cityFilter.toLowerCase());
+            const matchesCity = debouncedCity === "" || ad.city.toLowerCase().includes(debouncedCity.toLowerCase());
 
-        let matchesDate = true;
-        if (dateFilter) {
-            const checkDate = new Date(dateFilter);
-            const start = new Date(ad.availabilityStart);
-            const end = new Date(ad.availabilityEnd);
-            matchesDate = checkDate >= start && checkDate <= end;
-        }
+            let matchesDate = true;
+            if (dateFilter) {
+                const checkDate = new Date(dateFilter);
+                const start = new Date(ad.availabilityStart);
+                const end = new Date(ad.availabilityEnd);
+                matchesDate = checkDate >= start && checkDate <= end;
+            }
 
-        return matchesSearch && matchesCity && matchesDate && matchesType;
-    });
+            return matchesSearch && matchesCity && matchesDate && matchesType;
+        });
+    }, [ads, typeFilter, debouncedSearch, debouncedCity, dateFilter]);
+
+    // Reset to page 1 when filters change
+    useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch, debouncedCity, dateFilter, typeFilter]);
+
+    const totalPages = Math.max(1, Math.ceil(filteredAds.length / PAGE_SIZE));
+    const pagedAds = filteredAds.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     const addAdToList = (newAd) => {
         setAds((prevAds) => [newAd, ...prevAds]);
@@ -267,11 +285,39 @@ const Announcements = () => {
               : "Aucune annonce ne correspond à votre recherche."}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredAds.map((ad) => (
-              <AdCard key={ad._id} ad={ad} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {pagedAds.map((ad) => (
+                <AdCard key={ad._id} ad={ad} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-4 mt-10">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="flex items-center gap-1 hover:cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" /> Précédent
+                </Button>
+                <span className="text-sm text-mauve-fonce/70">
+                  Page {page} sur {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="flex items-center gap-1 hover:cursor-pointer"
+                >
+                  Suivant <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+          </>
         )}
 
         {user && (
