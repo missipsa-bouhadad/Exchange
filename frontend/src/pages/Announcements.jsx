@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { MapPin, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import AdCard from '../components/ui/AdCard';
 import {useSelector} from "react-redux";
 import CreateAdModal from "@/components/ui/CreateAdModal.jsx";
 import { Input } from "@/components/ui/input.jsx";
+import { Button } from "@/components/ui/button.jsx";
 
 const Announcements = () => {
     const [ads, setAds] = useState([]);
@@ -16,20 +19,59 @@ const Announcements = () => {
     const [dateFilter, setDateFilter] = useState("");
     const [typeFilter, setTypeFilter] = useState("ALL");
 
-    useEffect(() => {
-        const fetchAds = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/v1/ad/ads');
-                setAds(response.data.ads);
-                setLoading(false);
-            } catch (err) {
-                console.error("Erreur API:", err);
-                setError("Oups ! Impossible de charger les annonces.");
-                setLoading(false);
+    // Geo search state
+    const [userCoords, setUserCoords] = useState(null);
+    const [radius, setRadius] = useState(10);
+    const [geoLocating, setGeoLocating] = useState(false);
+
+    const fetchAds = async (coords = null, radiusKm = null) => {
+        try {
+            const params = {};
+            if (coords) {
+                params.lat = coords.lat;
+                params.lng = coords.lng;
+                params.radius = radiusKm;
             }
-        };
+            const response = await axios.get('http://localhost:8000/api/v1/ad/ads', { params });
+            setAds(response.data.ads);
+            setLoading(false);
+        } catch (err) {
+            console.error("Erreur API:", err);
+            setError("Oups ! Impossible de charger les annonces.");
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchAds();
     }, []);
+
+    const detectLocation = () => {
+        if (!navigator.geolocation) {
+            return toast.error("La géolocalisation n'est pas supportée par votre navigateur.");
+        }
+        setGeoLocating(true);
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                setUserCoords(coords);
+                setGeoLocating(false);
+                setLoading(true);
+                fetchAds(coords, radius);
+                toast.success("Recherche géolocalisée activée.");
+            },
+            () => {
+                toast.error("Veuillez autoriser l'accès à la géolocalisation.");
+                setGeoLocating(false);
+            }
+        );
+    };
+
+    const clearGeo = () => {
+        setUserCoords(null);
+        setLoading(true);
+        fetchAds();
+    };
 
     const filteredAds = ads.filter((ad) => {
         const matchesType = typeFilter === "ALL" || ad.type === typeFilter;
@@ -121,6 +163,39 @@ const Announcements = () => {
             {filteredAds.length} résultat{filteredAds.length > 1 ? "s" : ""}{" "}
             trouvé{filteredAds.length > 1 ? "s" : ""}
           </div>
+
+          {userCoords && (
+            <div className="flex items-center gap-4 mt-4 p-3 bg-mauve-clair rounded-lg border border-mauve-fonce/20">
+              <MapPin className="w-4 h-4 text-mauve-fonce flex-shrink-0" />
+              <span className="text-sm text-mauve-fonce">
+                Rayon : <strong>{radius} km</strong>
+              </span>
+              <input
+                type="range"
+                min="1"
+                max="100"
+                value={radius}
+                onChange={(e) => setRadius(parseInt(e.target.value, 10))}
+                className="flex-grow accent-mauve-fonce"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setLoading(true);
+                  fetchAds(userCoords, radius);
+                }}
+              >
+                Appliquer
+              </Button>
+              <button
+                onClick={clearGeo}
+                className="text-sm text-mauve-fonce/70 hover:text-mauve-fonce underline"
+              >
+                Réinitialiser
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="text-center mb-8">
@@ -131,6 +206,24 @@ const Announcements = () => {
             Découvrez les objets et compétences partagés par vos voisins.
           </p>
         </div>
+
+        {!userCoords && (
+          <div className="flex justify-center mb-6">
+            <Button
+              variant="default"
+              onClick={detectLocation}
+              disabled={geoLocating}
+              className="flex items-center gap-2 hover:cursor-pointer"
+            >
+              {geoLocating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <MapPin className="w-4 h-4" />
+              )}
+              {geoLocating ? "Localisation..." : "Près de moi"}
+            </Button>
+          </div>
+        )}
 
         <div className="flex justify-center mb-6">
           <div className="bg-mauve-clair p-1 rounded-lg inline-flex shadow-inner">

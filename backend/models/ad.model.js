@@ -18,6 +18,17 @@ const adSchema=mongoose.Schema({
         type:String,
         required:true
     },
+    location: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point",
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            default: [0, 0],
+        },
+    },
     imageUrl:{
         type:String,
         default:""
@@ -45,6 +56,9 @@ const adSchema=mongoose.Schema({
         default: "AVAILABLE"
     },
 },{timestamps:true})
+
+// 2dsphere index for geo queries ($geoNear, $near, $within)
+adSchema.index({ location: "2dsphere" });
 
 
 export const Ad=mongoose.model("Ad",adSchema)

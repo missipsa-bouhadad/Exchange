@@ -2,6 +2,7 @@ import { Ad } from '../models/ad.model.js'
 import cloudinary from '../utils/cloudinary.js'
 import getDataUri from '../utils/dataUri.js'
 import { getPublicIdFromUrl } from '../utils/cloudinaryHelper.js'
+import { geocodeCity } from '../utils/geocode.js'
 import mongoose from "mongoose";
 
 export const createAd=async(req,res)=>{
@@ -21,6 +22,12 @@ export const createAd=async(req,res)=>{
             });
         }
 
+        // Geocode city for geo search
+        const geo = await geocodeCity(city);
+        const location = geo
+            ? { type: "Point", coordinates: [geo.lng, geo.lat] }
+            : { type: "Point", coordinates: [0, 0] };
+
         if (file){
             let cloudResponse;
             const fileUri = getDataUri(req.file);
@@ -31,6 +38,7 @@ export const createAd=async(req,res)=>{
                     description,
                     type,
                     city,
+                    location,
                     imageUrl: cloudResponse.secure_url,
                     user: userId,
                     availabilityStart,
@@ -44,6 +52,7 @@ export const createAd=async(req,res)=>{
                 description,
                 type,
                 city,
+                location,
                 user: userId,
                 availabilityStart,
                 availabilityEnd,
@@ -96,7 +105,15 @@ export const updateAd = async (req, res) => {
 
         ad.title = title || ad.title;
         ad.description = description || ad.description;
-        ad.city = city || ad.city;
+        if (city && city !== ad.city) {
+            const geo = await geocodeCity(city);
+            if (geo) {
+                ad.city = city;
+                ad.location = { type: "Point", coordinates: [geo.lng, geo.lat] };
+            } else {
+                ad.city = city;
+            }
+        }
         ad.type = type || ad.type;
         ad.availabilityStart = availabilityStart || ad.availabilityStart;
         ad.availabilityEnd = availabilityEnd || ad.availabilityEnd;
@@ -119,7 +136,33 @@ export const updateAd = async (req, res) => {
 
 export const getAllAds=async(req,res)=>{
     try {
-        const ads=await Ad.find({}).populate('user');
+        const { lat, lng, radius } = req.query;
+        const hasGeo = lat !== undefined && lng !== undefined
+            && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng));
+
+        let ads;
+        if (hasGeo) {
+            const radiusMeters = Math.max(1, parseFloat(radius) || 10) * 1000;
+            ads = await Ad.aggregate([
+                {
+                    $geoNear: {
+                        near: {
+                            type: "Point",
+                            coordinates: [parseFloat(lng), parseFloat(lat)],
+                        },
+                        distanceField: "distance",
+                        maxDistance: radiusMeters,
+                        spherical: true,
+                    },
+                },
+                { $lookup: { from: "users", localField: "user", foreignField: "_id", as: "user" } },
+                { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
+                { $project: { password: 0, "user.password": 0, "user.__v": 0 } },
+            ]);
+        } else {
+            ads = await Ad.find({}).populate('user');
+        }
+
         return res.status(200).json({
             success:true,
             ads
