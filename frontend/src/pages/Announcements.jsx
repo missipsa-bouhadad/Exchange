@@ -133,85 +133,104 @@ const Announcements = () => {
 
     return (
       <div className="container mx-auto px-4 py-25">
-        <div className="bg-blanc p-6 rounded-xl shadow-sm border border-mauve-clair mb-10 max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="Rechercher (ex: Perceuse, Thomas...)"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-              <svg
-                className="w-5 h-5 absolute left-3 top-2.5 text-mauve-fonce/70"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                ></path>
-              </svg>
+        <div className="bg-blanc p-7 rounded-2xl shadow-md border-2 border-mauve-fonce/20 mb-10 max-w-4xl mx-auto transition-all duration-300 hover:shadow-2xl hover:border-mauve-fonce/50 hover:-translate-y-0.5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-mauve-fonce">
+                Recherche
+              </label>
+              <div className="relative group">
+                <Input
+                  type="text"
+                  placeholder="Ex : Perceuse, Thomas..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="h-11 pl-10 border-mauve-fonce/20 bg-blanc focus:ring-2 focus:ring-mauve-fonce/30 focus:border-mauve-fonce transition-all duration-200 hover:border-mauve-fonce/40"
+                />
+                <svg
+                  className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-mauve-fonce/60 group-focus-within:text-mauve-fonce transition-colors pointer-events-none"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
             </div>
 
-            <div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-mauve-fonce">
+                Ville
+              </label>
               <Input
                 type="text"
-                placeholder="Filtrer par ville..."
+                placeholder="Ex : Lyon"
                 value={cityFilter}
                 onChange={(e) => setCityFilter(e.target.value)}
+                className="h-11 border-mauve-fonce/20 bg-blanc focus:ring-2 focus:ring-mauve-fonce/30 focus:border-mauve-fonce transition-all duration-200 hover:border-mauve-fonce/40"
               />
             </div>
 
-            <div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-mauve-fonce">
+                Date disponible
+              </label>
               <Input
                 type="date"
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
-                className="cursor-pointer"
+                className="h-11 cursor-pointer border-mauve-fonce/20 bg-blanc focus:ring-2 focus:ring-mauve-fonce/30 focus:border-mauve-fonce transition-all duration-200 hover:border-mauve-fonce/40"
               />
             </div>
           </div>
 
-          <div className="text-right text-xs text-mauve-fonce/70 mt-2">
-            {filteredAds.length} résultat{filteredAds.length > 1 ? "s" : ""}{" "}
-            trouvé{filteredAds.length > 1 ? "s" : ""}
+          <div className="flex items-center justify-end mt-6 mb-2 py-3 border-t border-transparent bg-gradient-to-r from-transparent via-mauve-clair/60 to-transparent">
+            <span className="inline-flex items-center gap-2 bg-mauve-clair text-mauve-fonce text-sm font-bold px-4 py-1.5 rounded-full">
+              <span>{filteredAds.length}</span>
+              <span>résultat{filteredAds.length > 1 ? "s" : ""}</span>
+            </span>
           </div>
 
           {userCoords && (
-            <div className="flex items-center gap-4 mt-4 p-3 bg-mauve-clair rounded-lg border border-mauve-fonce/20">
-              <MapPin className="w-4 h-4 text-mauve-fonce flex-shrink-0" />
-              <span className="text-sm text-mauve-fonce">
-                Rayon : <strong>{radius} km</strong>
-              </span>
-              <input
-                type="range"
-                min="1"
-                max="100"
-                value={radius}
-                onChange={(e) => setRadius(parseInt(e.target.value, 10))}
-                className="flex-grow accent-mauve-fonce"
-              />
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setLoading(true);
-                  fetchAds(userCoords, radius);
-                }}
-              >
-                Appliquer
-              </Button>
-              <button
-                onClick={clearGeo}
-                className="text-sm text-mauve-fonce/70 hover:text-mauve-fonce underline"
-              >
-                Réinitialiser
-              </button>
+            <div className="mt-5 p-4 bg-mauve-clair/40 rounded-xl border border-mauve-fonce/20 transition-all hover:shadow-md">
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-mauve-fonce" />
+                  <span className="text-sm font-medium text-mauve-fonce">
+                    Rayon : {radius} km
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="100"
+                  value={radius}
+                  onChange={(e) => setRadius(parseInt(e.target.value, 10))}
+                  className="flex-grow min-w-[120px] accent-mauve-fonce"
+                />
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => {
+                    setLoading(true);
+                    fetchAds(userCoords, radius);
+                  }}
+                  className="hover:cursor-pointer"
+                >
+                  Appliquer
+                </Button>
+                <button
+                  onClick={clearGeo}
+                  className="text-xs text-mauve-fonce/70 hover:text-mauve-fonce underline hover:cursor-pointer"
+                >
+                  Réinitialiser la géoloc
+                </button>
+              </div>
             </div>
           )}
         </div>
