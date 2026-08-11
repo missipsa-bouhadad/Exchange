@@ -37,6 +37,18 @@ export const sendMessage=async (req,res)=>{
             message: `${req.user.firstName}-${req.user.lastName} vous a envoyé un nouveau message`,
             link: `/dashboard/messages`,
           });
+
+          const notif = await Notification.findOne({
+            receiver: receiver._id,
+            sender: req.user._id,
+            type: "MESSAGE",
+          })
+            .sort({ createdAt: -1 })
+            .populate("sender", "firstName lastName photoUrl");
+          if (notif) {
+            const { broadcastTo } = await import("../utils/sseHub.js");
+            broadcastTo(receiver._id, "notification", notif);
+          }
         }
 
         //m a j latest message de la conversation

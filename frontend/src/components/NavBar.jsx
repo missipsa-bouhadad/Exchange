@@ -46,6 +46,35 @@ const NavBar = () => {
     fetchNotifications();
   }, [user]);
 
+  // subscribe to real-time notifications pushed by the server
+  useEffect(() => {
+    if (!user) return;
+
+    const es = new EventSource(
+      "http://localhost:8000/api/v1/notifications/stream",
+      { withCredentials: true }
+    );
+
+    es.addEventListener("notification", (e) => {
+      try {
+        const notif = JSON.parse(e.data);
+        setNotifications((prev) => {
+          // avoid duplicates if the notif is already there
+          if (prev.some((n) => n._id === notif._id)) return prev;
+          return [notif, ...prev];
+        });
+      } catch (err) {
+        console.error("Failed to parse SSE payload", err);
+      }
+    });
+
+    es.onerror = () => {
+      // browser auto-reconnects (nothing to do)
+    };
+
+    return () => es.close();
+  }, [user]);
+
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const logoutHandler = async () => {

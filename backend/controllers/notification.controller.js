@@ -1,4 +1,40 @@
 import Notification from "../models/notification.model.js";
+import { addClient, removeClient } from "../utils/sseHub.js";
+
+// SSE endpoint (keeps the connection open and registers the response in the hub)
+// The hub pushes new notifications when they are created elsewhere in the app.
+export const streamNotifications = async (req, res) => {
+  const userId = req.user._id;
+
+  // SSE headers
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no"); // disable nginx buffering if proxied
+  res.flushHeaders?.();
+
+  // Tell the client the stream is open
+  res.write(`event: connected\ndata: ${JSON.stringify({ ok: true })}\n\n`);
+
+  addClient(userId, res);
+
+  // ping every 25 sec 
+  const ping = setInterval(() => {
+    try {
+      res.write(`: ping\n\n`);
+    } catch {
+      clearInterval(ping);
+    }
+  }, 25000);
+
+  const cleanup = () => {
+    clearInterval(ping);
+    removeClient(userId, res);
+  };
+
+  req.on("close", cleanup);
+  req.on("aborted", cleanup);
+};
 
 export const getNotifications=async(req,res )=>{
     try {

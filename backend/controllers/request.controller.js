@@ -34,6 +34,18 @@ export const createRequest = async (req, res) => {
       link: "/dashboard/requests",
     });
 
+    const notif = await Notification.findOne({
+      receiver: ad.user,
+      sender: req.user._id,
+      type: "REQUEST",
+    })
+      .sort({ createdAt: -1 })
+      .populate("sender", "firstName lastName photoUrl");
+    if (notif) {
+      const { broadcastTo } = await import("../utils/sseHub.js");
+      broadcastTo(ad.user, "notification", notif);
+    }
+
     res.json({ success: true, data: request });
   } catch (error) {
     console.error(error);
