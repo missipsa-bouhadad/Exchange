@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -185,6 +185,22 @@ const Profile = () => {
     );
   };
 
+  // Génère l'URL de prévisualisation une seule fois par fichier
+  // et la libère proprement quand le fichier change ou au démontage.
+  const previewUrl = useMemo(() => {
+    if (input.file instanceof File) {
+      return URL.createObjectURL(input.file);
+    }
+    return typeof input.file === "string" ? input.file : null;
+  }, [input.file]);
+
+  useEffect(() => {
+    return () => {
+      if (input.file instanceof File && previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl, input.file]);
 
   return (
     <div className="pt-20 min-h-screen bg-blanc flex justify-center p-4">
@@ -193,11 +209,7 @@ const Profile = () => {
           <div className="flex flex-col items-center md:items-start flex-shrink-0">
             <Avatar className="h-40 w-40 rounded-full border-4 border-mauve-fonce shadow-md">
               <AvatarImage
-                src={
-                  input.file instanceof File
-                    ? URL.createObjectURL(input.file)
-                    : input.file || "https://github.com/shadcn.png"
-                }
+                src={previewUrl || "https://github.com/shadcn.png"}
                 alt={`${input.firstName} ${input.lastName}`}
                 className="object-cover h-full w-full rounded-full"
               />

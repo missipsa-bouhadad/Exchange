@@ -36,8 +36,8 @@ const AdDetail = () => {
   }, [id]);
 
   const submitRequest = async () => {
-    if (!ad?.user?._id || requestedObject.trim() === "") {
-      toast.error("Veuillez remplir le champ de votre demande.");
+    if (!ad?.user?._id || requestedObject.trim().length < 3) {
+      toast.error("Veuillez rédiger un message d'au moins de 3 caractères.");
       return;
     }
 
