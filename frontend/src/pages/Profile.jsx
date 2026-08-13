@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Card,
   CardContent,
-  CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -17,8 +15,12 @@ import {
   GripVertical,
   FileText,
   Camera,
-  Loader2, 
-  Edit, 
+  Loader2,
+  Edit,
+  Package,
+  Star,
+  TrendingUp,
+  Calendar,
 } from "lucide-react";
 import {
   Dialog,
@@ -57,11 +59,12 @@ const Profile = () => {
     tel: user?.tel || "",
     bio: user?.bio || "",
     location: user?.location || "",
-    file: user?.photoUrl || "", 
+    file: user?.photoUrl || "",
   });
   const [isLocating, setIsLocating] = useState(false);
+  const fileInputRef = useRef(null);
 
-  // Charger les stats réelles depuis l'API
+  // Charger les stats reelles depuis l'API
   useEffect(() => {
     if (!user?._id) return;
     const fetchStats = async () => {
@@ -80,14 +83,12 @@ const Profile = () => {
     fetchStats();
   }, [user?._id]);
 
-
-  // pour formater la date createdAt 
+  // formater la date createdAt
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const options = { year: "numeric", month: "long" };
-    return new Date(dateString).toLocaleDateString("fr-FR", options); // exp mars 2023
+    return new Date(dateString).toLocaleDateString("fr-FR", options);
   };
-
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -126,8 +127,6 @@ const Profile = () => {
         "http://localhost:8000/api/v1/user/profile/update",
         formData,
         {
-          headers: {
-          },
           withCredentials: true,
         }
       );
@@ -135,13 +134,13 @@ const Profile = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         dispatch(setUser(res.data.user));
-        setOpen(false); 
+        setOpen(false);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Échec de la mise à jour.");
+      toast.error(error.response?.data?.message || "Echec de la mise a jour.");
       console.log(error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -151,11 +150,11 @@ const Profile = () => {
     return `${first}${last}`.toUpperCase();
   };
 
-  // api pour detecter automatiquement la localisation
+  // detecter automatiquement la localisation
   const detectLocation = () => {
     if (!navigator.geolocation) {
       return toast.error(
-        "La géolocalisation n'est pas supportée par votre navigateur."
+        "La geolocalisation n'est pas supportee par votre navigateur."
       );
     }
 
@@ -173,20 +172,20 @@ const Profile = () => {
 
           setInput((prev) => ({ ...prev, location: detectedLocation }));
         } catch (err) {
-          toast.error("Échec de la récupération de la localisation.");
+          toast.error("Echec de la recuperation de la localisation.");
         } finally {
           setIsLocating(false);
         }
       },
       () => {
-        toast.error("Veuillez autoriser l'accès à la géolocalisation.");
+        toast.error("Veuillez autoriser l'acces a la geolocalisation.");
         setIsLocating(false);
       }
     );
   };
 
-  // Génère l'URL de prévisualisation une seule fois par fichier
-  // et la libère proprement quand le fichier change ou au démontage.
+  // URL de previsualisation, generee une seule fois par fichier,
+  // liberee quand le fichier change ou au demontage.
   const previewUrl = useMemo(() => {
     if (input.file instanceof File) {
       return URL.createObjectURL(input.file);
@@ -203,234 +202,267 @@ const Profile = () => {
   }, [previewUrl, input.file]);
 
   return (
-    <div className="pt-20 min-h-screen bg-blanc flex justify-center p-4">
-      <div className="w-full max-w-4xl mx-auto">
-        <Card className="flex md:flex-row flex-col items-center gap-10 p-6 md:p-10 shadow-xl border-t-4 border-t-mauve-fonce">
-          <div className="flex flex-col items-center md:items-start flex-shrink-0">
-            <Avatar className="h-40 w-40 rounded-full border-4 border-mauve-fonce shadow-md">
-              <AvatarImage
-                src={previewUrl || "https://github.com/shadcn.png"}
-                alt={`${input.firstName} ${input.lastName}`}
-                className="object-cover h-full w-full rounded-full"
+    <div className="pt-20 min-h-screen bg-blanc">
+      <div className="max-w-4xl mx-auto px-4 pb-12">
+        {/* Banniere + AVATAR */}
+        <div className="relative">
+          <div className="h-40 md:h-48 w-full rounded-t-2xl bg-gradient-to-br from-mauve-fonce to-mauve-clair shadow-md" />
+
+          {/* Bouton Modifier */}
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="default"
+                className="absolute top-4 right-4 shadow-md"
+              >
+                <Edit className="mr-2 h-4 w-4" /> Modifier le profil
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto p-6">
+              <form onSubmit={submitHandler}>
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold text-mauve-fonce text-center">
+                    Modifier le profil
+                  </DialogTitle>
+
+                  <DialogDescription className="text-center">
+                    Mettez a jour vos informations personnelles.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="grid gap-4 py-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <Label
+                        htmlFor="firstName"
+                        className="flex items-center gap-2"
+                      >
+                        <User className="h-4 w-4 text-mauve-fonce/70" /> Prenom
+                      </Label>
+                      <Input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        value={input.firstName}
+                        onChange={changeEventHandler}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <Label
+                        htmlFor="lastName"
+                        className="flex items-center gap-2"
+                      >
+                        <GripVertical className="h-4 w-4 text-mauve-fonce/70" />{" "}
+                        Nom
+                      </Label>
+                      <Input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        value={input.lastName}
+                        onChange={changeEventHandler}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <Label
+                      htmlFor="email"
+                      className="flex items-center gap-2"
+                    >
+                      <Mail className="h-4 w-4 text-mauve-fonce/70" /> Email
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={input.email}
+                      onChange={changeEventHandler}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <Label
+                        htmlFor="tel"
+                        className="flex items-center gap-2"
+                      >
+                        <Phone className="h-4 w-4 text-mauve-fonce/70" /> Tel
+                      </Label>
+                      <Input
+                        id="tel"
+                        name="tel"
+                        type="text"
+                        value={input.tel}
+                        onChange={changeEventHandler}
+                        placeholder="Ex : +33 6..."
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <Label
+                        htmlFor="location"
+                        className="flex items-center gap-2"
+                      >
+                        <MapPin className="h-4 w-4 text-mauve-fonce/70" />{" "}
+                        Localisation
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="location"
+                          name="location"
+                          type="text"
+                          value={input.location}
+                          onChange={changeEventHandler}
+                          placeholder="Paris, France"
+                          className="flex-grow"
+                        />
+                        <Button
+                          type="button"
+                          onClick={detectLocation}
+                          disabled={isLocating}
+                          variant="secondary"
+                          className="flex-shrink-0"
+                        >
+                          {isLocating ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <MapPin className="mr-2 h-4 w-4" />
+                          )}
+                          {isLocating ? "Detection..." : "Auto"}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="bio" className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-mauve-fonce/70" /> Bio
+                    </Label>
+                    <Textarea
+                      id="bio"
+                      name="bio"
+                      value={input.bio}
+                      onChange={changeEventHandler}
+                      placeholder="Decrivez-vous en quelques mots..."
+                      className="min-h-[80px]"
+                    />
+                  </div>
+
+                  {/* Photo */}
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="file" className="flex items-center gap-2">
+                      <Camera className="h-4 w-4 text-mauve-fonce/70" /> Photo
+                      de profil
+                    </Label>
+                    <Input
+                      id="file"
+                      type="file"
+                      name="file"
+                      accept="image/*"
+                      onChange={changeFileHandler}
+                    />
+                  </div>
+                </div>
+
+                <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-between gap-2 pt-4">
+                  <DialogClose asChild>
+                    <Button variant="outline" type="button" className="w-full sm:w-auto">
+                      Annuler
+                    </Button>
+                  </DialogClose>
+                  <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+                    {isLoading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      "Sauvegarder"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Avatar */}
+          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
+            <div className="relative group">
+              <Avatar className="h-32 w-32 border-4 border-blanc shadow-lg">
+                <AvatarImage
+                  src={previewUrl || "https://github.com/shadcn.png"}
+                  alt={`${input.firstName} ${input.lastName}`}
+                  className="object-cover"
+                />
+                <AvatarFallback className="text-3xl font-semibold text-mauve-fonce">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* Bouton camera au hover*/}
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="absolute inset-0 flex items-center justify-center rounded-full bg-mauve-fonce/60 opacity-0 group-hover:opacity-100 transition-opacity"
+                aria-label="Changer la photo de profil"
+              >
+                <Camera className="h-7 w-7 text-blanc" />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={changeFileHandler}
               />
-              <AvatarFallback className="flex items-center justify-center h-full w-full bg-mauve-clair text-3xl font-semibold text-mauve-fonce">
-                {getInitials()}
-              </AvatarFallback>
-            </Avatar>
+            </div>
           </div>
-          <div className="flex flex-col gap-3 w-full">
-            <CardTitle className="text-3xl font-bold text-mauve-fonce">
+        </div>
+
+        {/* Infos */}
+        <Card className="mt-20 shadow-md rounded-2xl">
+          <CardContent className="p-6 md:p-8 text-center">
+            <CardTitle className="text-2xl md:text-3xl font-bold text-mauve-fonce">
               {user?.firstName} {user?.lastName}
             </CardTitle>
 
-            <CardDescription className="text-mauve-fonce/70 italic">
-              {user?.bio || "Pas de bio renseignée."}
+            <CardDescription className="mt-2 text-mauve-fonce/70 italic">
+              {user?.bio || "Pas de bio renseignee."}
             </CardDescription>
 
-            <div className="flex flex-col gap-3 mt-4 text-sm text-mauve-fonce">
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-mauve-fonce" />
-                <span>{user?.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-mauve-fonce" />
-                <span>{user?.tel || "Non renseigné"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-mauve-fonce" />
-                <span>{user?.location || "Non renseignée"}</span>
-              </div>
-
-              <CardDescription className="pt-2 text-xs text-mauve-fonce/70">
-                Membre depuis {formatDate(user?.createdAt)}
-              </CardDescription>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-mauve-fonce">
+              <span className="inline-flex items-center gap-1.5">
+                <Mail className="w-4 h-4" />
+                {user?.email}
+              </span>
+              {user?.tel && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Phone className="w-4 h-4" />
+                  {user.tel}
+                </span>
+              )}
+              {user?.location && (
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4" />
+                  {user.location}
+                </span>
+              )}
             </div>
 
-            <div className="mt-6 flex justify-end w-full">
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="default" className="w-fit">
-                    <Edit className="mr-2 h-4 w-4" /> Modifier le profil
-                  </Button>
-                </DialogTrigger>
-
-                <DialogContent className="sm:max-w-[550px] p-6">
-                  <form onSubmit={submitHandler}>
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl font-bold text-mauve-fonce text-center">
-                        Modifier le profil
-                      </DialogTitle>
-                      
-                      <DialogDescription className="text-center">
-                        Mettez à jour vos informations personnelles.
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="grid gap-4 py-6">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1.5">
-                          <Label
-                            htmlFor="firstName"
-                            className="flex items-center gap-2"
-                          >
-                            <User className="h-4 w-4 text-mauve-fonce/70" /> Prénom
-                          </Label>
-                          <Input
-                            id="firstName"
-                            name="firstName"
-                            type="text"
-                            value={input.firstName}
-                            onChange={changeEventHandler}
-                          />
-                        </div>
-                        <div className="flex flex-col gap-1.5">
-                          <Label
-                            htmlFor="lastName"
-                            className="flex items-center gap-2"
-                          >
-                            <GripVertical className="h-4 w-4 text-mauve-fonce/70" />{" "}
-                            Nom
-                          </Label>
-                          <Input
-                            id="lastName"
-                            name="lastName"
-                            type="text"
-                            value={input.lastName}
-                            onChange={changeEventHandler}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <Label
-                          htmlFor="email"
-                          className="flex items-center gap-2"
-                        >
-                          <Mail className="h-4 w-4 text-mauve-fonce/70" /> Email
-                        </Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={input.email}
-                          onChange={changeEventHandler}
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1.5">
-                          <Label
-                            htmlFor="tel"
-                            className="flex items-center gap-2"
-                          >
-                            <Phone className="h-4 w-4 text-mauve-fonce/70" /> Tel
-                          </Label>
-                          <Input
-                            id="tel"
-                            name="tel"
-                            type="text"
-                            value={input.tel}
-                            onChange={changeEventHandler}
-                            placeholder="Ex : +33 6..."
-                          />
-                        </div>
-                        <div className="flex flex-col gap-1.5">
-                          <Label
-                            htmlFor="location"
-                            className="flex items-center gap-2"
-                          >
-                            <MapPin className="h-4 w-4 text-mauve-fonce/70" />{" "}
-                            Localisation
-                          </Label>
-                          <div className="flex gap-2">
-                            <Input
-                              id="location"
-                              name="location"
-                              type="text"
-                              value={input.location}
-                              onChange={changeEventHandler}
-                              placeholder="Paris, France"
-                              className="flex-grow"
-                            />
-                            <Button
-                              type="button"
-                              onClick={detectLocation}
-                              disabled={isLocating}
-                              variant="secondary"
-                              className="flex-shrink-0"
-                            >
-                              {isLocating ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              ) : (
-                                <MapPin className="mr-2 h-4 w-4" />
-                              )}
-                              {isLocating ? "Détection..." : "Auto"}
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-1.5">
-                        <Label
-                          htmlFor="bio"
-                          className="flex items-center gap-2"
-                        >
-                          <FileText className="h-4 w-4 text-mauve-fonce/70" /> Bio
-                        </Label>
-                        <Textarea
-                          id="bio"
-                          name="bio"
-                          value={input.bio}
-                          onChange={changeEventHandler}
-                          placeholder="Décrivez-vous en quelques mots..."
-                          className="min-h-[80px]"
-                        />
-                      </div>
-
-                      {/* Ligne 5: Photo */}
-                      <div className="flex flex-col gap-1.5">
-                        <Label
-                          htmlFor="file"
-                          className="flex items-center gap-2"
-                        >
-                          <Camera className="h-4 w-4 text-mauve-fonce/70" /> Photo de
-                          profil
-                        </Label>
-                        <Input
-                          id="file"
-                          type="file"
-                          name="file"
-                          accept="image/*"
-                          onChange={changeFileHandler}
-                        />
-                      </div>
-                    </div>
-
-                    <DialogFooter className="flex justify-between pt-4">
-                      <DialogClose asChild>
-                        <Button variant="outline" type="button">
-                          Annuler
-                        </Button>
-                      </DialogClose>
-                      <Button type="submit" disabled={isLoading}>
-                        {isLoading ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          "Sauvegarder"
-                        )}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
+            {user?.createdAt && (
+              <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-mauve-fonce/60">
+                <Calendar className="w-3.5 h-3.5" />
+                Membre depuis {formatDate(user.createdAt)}
+              </p>
+            )}
+          </CardContent>
         </Card>
 
-        {/* SECTION STATISTIQUES */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-          <Card className="shadow-md border-t-4 border-t-mauve-fonce">
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          <Card className="shadow-sm rounded-xl">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-mauve-fonce">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mauve-clair/40">
+                <Package className="h-6 w-6 text-mauve-fonce" />
+              </div>
+              <p className="text-3xl font-extrabold text-mauve-fonce">
                 {stats.activeAds}
               </p>
               <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
@@ -438,25 +470,32 @@ const Profile = () => {
               </p>
             </CardContent>
           </Card>
-          <Card className="shadow-md border-t-4 border-t-mauve-fonce">
+
+          <Card className="shadow-sm rounded-xl">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-mauve-fonce">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mauve-clair/40">
+                <TrendingUp className="h-6 w-6 text-mauve-fonce" />
+              </div>
+              <p className="text-3xl font-extrabold text-mauve-fonce">
                 {stats.totalAds}
               </p>
               <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
-                Annonces publiées
+                Annonces publiees
               </p>
             </CardContent>
           </Card>
-          <Card className="shadow-md border-t-4 border-t-mauve-fonce">
+
+          <Card className="shadow-sm rounded-xl">
             <CardContent className="p-6 text-center">
-              <p className="text-4xl font-extrabold text-mauve-fonce">
-                {stats.ratingsCount > 0 ? `${stats.avgRating} ★` : "—"}
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mauve-clair/40">
+                <Star className="h-6 w-6 text-mauve-fonce" />
+              </div>
+              <p className="text-3xl font-extrabold text-mauve-fonce">
+                {stats.ratingsCount > 0 ? `${stats.avgRating}` : "-"}
               </p>
               <p className="text-sm font-medium text-mauve-fonce/70 mt-1">
-                Note moyenne{stats.ratingsCount > 0
-                  ? ` (${stats.ratingsCount})`
-                  : ""}
+                Note moyenne
+                {stats.ratingsCount > 0 ? ` (${stats.ratingsCount})` : ""}
               </p>
             </CardContent>
           </Card>
